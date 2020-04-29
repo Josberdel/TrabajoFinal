@@ -10,7 +10,7 @@ public class Rey extends Pieza {
     public Rey(boolean color, Vector2 posicion, Texture texture, int cont) {
         super(color, posicion, texture);
         this.cont = cont;
-        rect = new Rectangle(posicion.x, posicion.y, texture.getWidth(), texture.getHeight());
+
     }
 
 

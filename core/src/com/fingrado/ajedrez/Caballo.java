@@ -7,13 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public class Caballo extends Pieza {
-    public Rectangle rect;
     int i=0;
     int j=0;
    // ArrayList<posicion>
     public Caballo(boolean color, Vector2 posicion, Texture texture) {
         super(color, posicion, texture);
-        rect = new Rectangle(posicion.x, posicion.y, texture.getWidth(), texture.getHeight());
+
     }
 
 
