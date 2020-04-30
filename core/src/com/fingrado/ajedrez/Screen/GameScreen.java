@@ -17,13 +17,28 @@ public class GameScreen implements Screen {
     int i=0;
     int j=0;
     int Contador_tablas;
-    private Array<Rey> reyBlanco;
+    //private Array<Rey> reyBlanco;
     private ArrayList<Peon> peonsBlancos;
     private ArrayList<Peon>peonsNegros;
     String matriz[][] = new String[8][8];
     Texture tablero[][] = new Texture[8][8];
     private Texture blanca = new Texture("piezasStauton/BLANCAS.PNG");
     private Texture negra= new Texture("piezasStauton/NEGRAS.PNG");
+    private Texture peonBlanco = new Texture("piezasStauton/peonBlanco.PNG");
+    private Texture peonNegro= new Texture("piezasStauton/peonNegro.PNG");
+
+    private Texture torreBlanca = new Texture("piezasStauton/torreBlanca.PNG");
+    private Texture torreNegra= new Texture("piezasStauton/torreNegra.PNG");
+    private Texture caballoBlanco = new Texture("piezasStauton/caballoBlanco.PNG");
+    private Texture caballoNegro= new Texture("piezasStauton/caballoNego.PNG");
+    private Texture alfilBlanco = new Texture("piezasStauton/alfinBlanco.PNG");
+    private Texture alfilNegro= new Texture("piezasStauton/alfilNegro.PNG");
+    private Texture damaBlanca = new Texture("piezasStauton/damaBlanca.PNG");
+    private Texture damaNegra= new Texture("piezasStauton/damaNegra.PNG");
+    private Texture reyBlanco = new Texture("piezasStauton/reyBlanco.PNG");
+    private Texture reyNegro= new Texture("piezasStauton/reyNegro.PNG");
+
+
 
     float aux=0;
     @Override
@@ -44,7 +59,70 @@ public class GameScreen implements Screen {
                 }
                 else
                     batch.draw(blanca,x+j*negra.getWidth(),y+i*negra.getHeight());
+                if(i==1){
+                    batch.draw(peonBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                }
+                if(i==6){
+                    batch.draw(peonNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                }
+                if(i==0){
+                    switch(j){
+                        case 0:
+                            batch.draw(torreBlanca,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 1:
+                            batch.draw(caballoBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 2:
+                            batch.draw(alfilBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 3:
+                            batch.draw(damaBlanca,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 4:
+                            batch.draw(reyBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 5:
+                            batch.draw(alfilBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 6:
+                            batch.draw(caballoBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 7:
+                            batch.draw(torreBlanca,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                    }
+                }
+                if(i==7){
+                    switch(j){
+                        case 0:
+                            batch.draw(torreNegra,x+j*negra.getWidth()+5,y+i*negra.getHeight());
+                            break;
+                        case 1:
+                            batch.draw(caballoNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 2:
+                            batch.draw(alfilNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 3:
+                            batch.draw(damaNegra,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 4:
+                            batch.draw(reyNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 5:
+                            batch.draw(alfilNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 6:
+                            batch.draw(caballoNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                        case 7:
+                            batch.draw(torreNegra,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            break;
+                    }
+                }
             }
+
         }
         batch.end();
     }
