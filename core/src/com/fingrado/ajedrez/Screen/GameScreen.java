@@ -44,6 +44,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
+        pintarTablero();
 
     }
 
@@ -53,43 +54,54 @@ public class GameScreen implements Screen {
         int y=Gdx.graphics.getHeight()/2-negra.getHeight()*4;
         for(i=0;i<8;i++){
             for(j=0;j<8;j++){
-
+                //colocar tablero
                 if((i+j)%2==0){
                     batch.draw(negra,x+j*negra.getWidth(),y+i*negra.getHeight());
+
                 }
                 else
                     batch.draw(blanca,x+j*negra.getWidth(),y+i*negra.getHeight());
                 if(i==1){
                     batch.draw(peonBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                    matriz[i][j]="B";
                 }
                 if(i==6){
                     batch.draw(peonNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                    matriz[i][j]="P";
                 }
                 if(i==0){
                     switch(j){
                         case 0:
                             batch.draw(torreBlanca,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="TB";
                             break;
                         case 1:
                             batch.draw(caballoBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="CB";
                             break;
                         case 2:
                             batch.draw(alfilBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="AB";
                             break;
                         case 3:
                             batch.draw(damaBlanca,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="DB";
                             break;
                         case 4:
                             batch.draw(reyBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="RB";
                             break;
                         case 5:
                             batch.draw(alfilBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="AB";
                             break;
                         case 6:
                             batch.draw(caballoBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="CB";
                             break;
                         case 7:
                             batch.draw(torreBlanca,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="TB";
                             break;
                     }
                 }
@@ -97,27 +109,35 @@ public class GameScreen implements Screen {
                     switch(j){
                         case 0:
                             batch.draw(torreNegra,x+j*negra.getWidth()+5,y+i*negra.getHeight());
+                            matriz[i][j]="TN";
                             break;
                         case 1:
                             batch.draw(caballoNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="CN";
                             break;
                         case 2:
                             batch.draw(alfilNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="AN";
                             break;
                         case 3:
                             batch.draw(damaNegra,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="DM";
                             break;
                         case 4:
                             batch.draw(reyNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="RN";
                             break;
                         case 5:
                             batch.draw(alfilNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="AN";
                             break;
                         case 6:
                             batch.draw(caballoNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="CN";
                             break;
                         case 7:
                             batch.draw(torreNegra,x+j*negra.getWidth(),y+i*negra.getHeight());
+                            matriz[i][j]="TN";
                             break;
                     }
                 }
@@ -128,7 +148,7 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(float delta){
         pintarTablero();
     }
 
@@ -154,9 +174,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
-    }
-    private void pintar() {
 
     }
 }
