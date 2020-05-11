@@ -22,6 +22,7 @@ public class GameScreen implements Screen {
     private ArrayList<Peon>peonsNegros;
     String matriz[][] = new String[8][8];
     Texture tablero[][] = new Texture[8][8];
+
     private Texture blanca = new Texture("piezasStauton/BLANCAS.PNG");
     private Texture negra= new Texture("piezasStauton/NEGRAS.PNG");
     private Texture peonBlanco = new Texture("piezasStauton/peonBlanco.PNG");
@@ -44,11 +45,41 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        pintarTablero();
+        for(i=0;i<8;i++) {
+            matriz[1][i] = "B";
+            matriz[6][i] = "N";
+            for(j=2;j<6;j++){
+                matriz[j][i]="";
+            }
+
+        }
+        matriz[0][0]="TB";
+        matriz[0][1]="CB";
+        matriz[0][2]="AB";
+        matriz[0][3]="DB";
+        matriz[0][4]="RB";
+        matriz[0][5]="AB";
+        matriz[0][6]="CB";
+        matriz[0][7]="TB";
+        matriz[7][0]="TN";
+        matriz[7][1]="CN";
+        matriz[7][2]="AN";
+        matriz[7][3]="DN";
+        matriz[7][4]="RN";
+        matriz[7][5]="AN";
+        matriz[7][6]="CN";
+        matriz[7][7]="TN";
+      /*  for(i=0;i<8;i++){
+            for(j=0;j<8;j++){
+                System.out.println("posicion "+i+ 1+","+j+1 +matriz[i][j]);
+            }
+        }*/
 
     }
 
     private void pintarTablero() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         int x=Gdx.graphics.getWidth()/2-negra.getWidth()*4;
         int y=Gdx.graphics.getHeight()/2-negra.getHeight()*4;
@@ -61,88 +92,52 @@ public class GameScreen implements Screen {
                 }
                 else
                     batch.draw(blanca,x+j*negra.getWidth(),y+i*negra.getHeight());
-
-                switch (i) {
-                    case 0:
-                        switch(j) {
-                            case 0:
-                                batch.draw(torreBlanca, x + j * negra.getWidth(), y + i * negra.getHeight());
-                                matriz[i][j] = "TB";
-                                break;
-                            case 1:
-                                batch.draw(caballoBlanco, x + j * negra.getWidth(), y + i * negra.getHeight());
-                                matriz[i][j] = "CB";
-                                break;
-                            case 2:
-                                batch.draw(alfilBlanco, x + j * negra.getWidth(), y + i * negra.getHeight());
-                                matriz[i][j] = "AB";
-                                break;
-                            case 3:
-                                batch.draw(damaBlanca, x + j * negra.getWidth(), y + i * negra.getHeight());
-                                matriz[i][j] = "DB";
-                                break;
-                            case 4:
-                                batch.draw(reyBlanco, x + j * negra.getWidth(), y + i * negra.getHeight());
-                                matriz[i][j] = "RB";
-                                break;
-                            case 5:
-                                batch.draw(alfilBlanco, x + j * negra.getWidth(), y + i * negra.getHeight());
-                                matriz[i][j] = "AB";
-                                break;
-                            case 6:
-                                batch.draw(caballoBlanco, x + j * negra.getWidth(), y + i * negra.getHeight());
-                                matriz[i][j] = "CB";
-                                break;
-                            case 7:
-                                batch.draw(torreBlanca, x + j * negra.getWidth(), y + i * negra.getHeight());
-                                matriz[i][j] = "TB";
-                                break;
-                        }
+                switch (matriz[i][j]) {
+                    case "TB":
+                        batch.draw(torreBlanca, x + j * negra.getWidth(), y + i * negra.getHeight());
                         break;
-                    case 1:
+                    case "CB":
+                        batch.draw(caballoBlanco, x + j * negra.getWidth(), y + i * negra.getHeight());
+                        break;
+                    case "AB":
+                        batch.draw(alfilBlanco, x + j * negra.getWidth(), y + i * negra.getHeight());
+                        break;
+                    case "DB":
+                        batch.draw(damaBlanca, x + j * negra.getWidth(), y + i * negra.getHeight());
+                        break;
+                    case "RB":
+                        batch.draw(reyBlanco, x + j * negra.getWidth(), y + i * negra.getHeight());
+                        break;
+                    case "B":
                         batch.draw(peonBlanco,x+j*negra.getWidth(),y+i*negra.getHeight());
-                        matriz[i][j]="B";
                         break;
-                    case 6:
+                    case "N":
                         batch.draw(peonNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
-                        matriz[i][j]="P";
                         break;
-                    case 7:
-                        switch(j){
-                            case 0:
-                                batch.draw(torreNegra,x+j*negra.getWidth()+5,y+i*negra.getHeight());
-                                matriz[i][j]="TN";
-                                break;
-                            case 1:
-                                batch.draw(caballoNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
-                                matriz[i][j]="CN";
-                                break;
-                            case 2:
-                                batch.draw(alfilNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
-                                matriz[i][j]="AN";
-                                break;
-                            case 3:
-                                batch.draw(damaNegra,x+j*negra.getWidth(),y+i*negra.getHeight());
-                                matriz[i][j]="DM";
-                                break;
-                            case 4:
-                                batch.draw(reyNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
-                                matriz[i][j]="RN";
-                                break;
-                            case 5:
-                                batch.draw(alfilNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
-                                matriz[i][j]="AN";
-                                break;
-                            case 6:
-                                batch.draw(caballoNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
-                                matriz[i][j]="CN";
-                                break;
-                            case 7:
-                                batch.draw(torreNegra,x+j*negra.getWidth(),y+i*negra.getHeight());
-                                matriz[i][j]="TN";
-                                break;
+                    case "TN":
+                        batch.draw(torreNegra,x+j*negra.getWidth()+5,y+i*negra.getHeight());
+                        break;
+                    case "CN":
+                        batch.draw(caballoNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                        break;
+                    case "AN":
+                        batch.draw(alfilNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                        break;
+                    case "DN":
+                        batch.draw(damaNegra,x+j*negra.getWidth(),y+i*negra.getHeight());
+                        break;
+                    case "RN":
+                        batch.draw(reyNegro,x+j*negra.getWidth(),y+i*negra.getHeight());
+                        break;
+                    case "":
+                        if((i+j)%2==0){
+                            batch.draw(negra,x+j*negra.getWidth(),y+i*negra.getHeight());
+
                         }
-                    break;
+                        else
+                            batch.draw(blanca,x+j*negra.getWidth(),y+i*negra.getHeight());
+                        break;
+                    default:
                     }
                 }
             }
@@ -178,4 +173,5 @@ public class GameScreen implements Screen {
     public void dispose() {
 
     }
+
 }
