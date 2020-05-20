@@ -19,7 +19,7 @@ public class GameScreen implements Screen , InputProcessor {
     int i=0;
     int j=0;
     int pos=0;
-
+    Pieza cont =null;
     int Contador_tablas;
 
     private ArrayList<Peon> peonsBlancos;
@@ -63,71 +63,68 @@ public class GameScreen implements Screen , InputProcessor {
         int y = Gdx.graphics.getHeight()-60;
         int i = 0;
         int j = 7;
-            FileHandle file = Gdx.files.internal("piezasStauton/tablero.txt");
-            String levelInfo= file.readString();
-            String  [] filas = levelInfo.split("\n" );
-            Pieza pieza = null;
-            for (String fila : filas){
-                String[] casillas = fila.split(",");
-                for (String casilla :casillas){
-                    switch (casilla){
-                        case "TN":
-                            pieza = new Torre("TorreN"+i+j,false, new Vector2(x, y),torreNegra);
-                            break;
-                        case "CN":
-                            pieza = new Caballo("CaballoN"+i+j,false, new Vector2(x, y),caballoNegro);
-                            break;
-                        case "AN":
-                            pieza = new Alfil("AlfilN"+i+j,false, new Vector2(x, y),alfilNegro);
-                            break;
-                        case "DN":
-                            pieza = new Dama("DamaN",false, new Vector2(x, y),damaNegra);
-                            break;
-                        case "RN":
-                            pieza = new Rey("ReyN",false, new Vector2(x, y),reyNegro);
-                            break;
-                        case "PN":
-                            pieza = new Peon("PeonN"+i+j,false, new Vector2(x, y),peonNegro);
-                            break;
-                        case "TB":
-                            pieza = new Torre("TorreB"+i+j,true, new Vector2(x, y),torreBlanca);
-                            break;
-                        case "CB":
-                            pieza = new Caballo("CaballoB"+i+j,true, new Vector2(x, y),caballoBlanco);
-                            break;
-                        case "AB":
-                            pieza = new Alfil("AlfilB"+i+j,true, new Vector2(x, y),alfilBlanco);
-                            break;
-                        case "DB":
-                            pieza = new Dama("DamaB",true, new Vector2(x, y),damaBlanca);
-                            break;
-                        case "RB":
-                            pieza = new Rey("ReyB",true, new Vector2(x, y),reyBlanco);
-                            break;
-                        case "PB":
-                            pieza = new Peon("PeonB"+i+j,true, new Vector2(x, y),peonBlanco);
-                            break;
-                        case "B":
-                            pieza = new Casilla("CasillaB"+i+j,false, new Vector2(x, y),texturaCasillaBlanca);
-                            break;
-                        case "N":
-                            pieza = new Casilla("CasillaN"+i+j,true, new Vector2(x, y),texturaCasillaNegra);
-                            break;
+        FileHandle file = Gdx.files.internal("piezasStauton/tablero.txt");
+        String levelInfo= file.readString();
+        String  [] filas = levelInfo.split("\n" );
+        Pieza pieza = null;
+        for (String fila : filas){
+            String[] casillas = fila.split(",");
+            for (String casilla :casillas){
+                switch (casilla){
+                    case "TN":
+                        pieza = new Torre("TorreN"+i+j,false, new Vector2(x, y),torreNegra);
+                        break;
+                    case "CN":
+                        pieza = new Caballo("CaballoN"+i+j,false, new Vector2(x, y),caballoNegro);
+                        break;
+                    case "AN":
+                        pieza = new Alfil("AlfilN"+i+j,false, new Vector2(x, y),alfilNegro);
+                        break;
+                    case "DN":
+                        pieza = new Dama("DamaN",false, new Vector2(x, y),damaNegra);
+                        break;
+                    case "RN":
+                        pieza = new Rey("ReyN",false, new Vector2(x, y),reyNegro);
+                        break;
+                    case "PN":
+                        pieza = new Peon("PeonN"+i+j,false, new Vector2(x, y),peonNegro);
+                        break;
+                    case "TB":
+                        pieza = new Torre("TorreB"+i+j,true, new Vector2(x, y),torreBlanca);
+                        break;
+                    case "CB":
+                        pieza = new Caballo("CaballoB"+i+j,true, new Vector2(x, y),caballoBlanco);
+                        break;
+                    case "AB":
+                        pieza = new Alfil("AlfilB"+i+j,true, new Vector2(x, y),alfilBlanco);
+                        break;
+                    case "DB":
+                        pieza = new Dama("DamaB",true, new Vector2(x, y),damaBlanca);
+                        break;
+                    case "RB":
+                        pieza = new Rey("ReyB",true, new Vector2(x, y),reyBlanco);
+                        break;
+                    case "PB":
+                        pieza = new Peon("PeonB"+i+j,true, new Vector2(x, y),peonBlanco);
+                        break;
+                    case "B":
+                        pieza = new Casilla("Casilla",false, new Vector2(x, y),texturaCasillaBlanca);
+                        break;
+                    case "N":
+                        pieza = new Casilla("Casilla",true, new Vector2(x, y),texturaCasillaNegra);
+                        break;
                     }
-                    matriz[i][j] = pieza;
-
-                    i += 1;
-                    x += 60;
-                }
-                y -= 60;
-                j -= 1;
-
-                x = 0;
-                i = 0;
-
+                matriz[i][j] = pieza;
+                System.out.println("matriz "+i+" "+j+" "+matriz[i][j].getNombre());
+                i += 1;
+                x += 60;
             }
+            y -= 60;
+            j -= 1;
+            x = 0;
+            i = 0;
         }
-
+    }
     @Override
     public void render(float delta){
         pintar();
@@ -140,31 +137,31 @@ public class GameScreen implements Screen , InputProcessor {
         batch.draw(texturaTablero, 0 , 0);
         for(i=0;i<8;i++){
             for(j=0;j<8;j++){
-
                 matriz[i][j].pintar(batch);
             }
         }
         batch.end();
     }
-
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Rectangle rect = new Rectangle(screenX,screenY ,5,5 );
-            for(i=0;i<8;i++){
+        for(i=0;i<8;i++){
                 for(j=0;j<8;j++){
-                    if(rect.overlaps(matriz[i][j].rect));
+                    if(rect.overlaps(matriz[i][j].rect))
                     {
-                        System.out.println(i+j+matriz[i][j].getNombre());
+                        System.out.println(i+""+j);
+                        System.out.println(matriz[i][j].getNombre());
+                        System.out.println(matriz[i][j].isColor());
+
+                
                         break;
                     }
                 }
             }
             return false;
         }
-
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Rectangle rect = new Rectangle(screenX,screenY ,5,5 );
         return false;
     }
 
@@ -175,14 +172,6 @@ public class GameScreen implements Screen , InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        Rectangle rect = new Rectangle(screenX,screenY ,5,5 );
-        for (Pieza pieza : piezas) {
-            if(rect.overlaps(pieza.rect));{
-
-
-            }
-        }
-
         return false;
     }
 
@@ -227,6 +216,5 @@ public class GameScreen implements Screen , InputProcessor {
 
     @Override
     public void hide() {
-
     }
 }

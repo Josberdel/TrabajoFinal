@@ -1,2 +1,0 @@
-# TrabajoFinal
-Proyecto final ajedrez
