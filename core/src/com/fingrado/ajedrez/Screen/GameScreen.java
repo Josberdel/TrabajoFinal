@@ -127,6 +127,7 @@ public class GameScreen implements Screen , InputProcessor {
     }
     @Override
     public void render(float delta){
+
         pintar();
     }
 
@@ -150,13 +151,15 @@ public class GameScreen implements Screen , InputProcessor {
                     if(rect.overlaps(matriz[i][j].rect))
                     {
                         j=7-j;
-                        if(cont==null&&matriz[i][j].getNombre().substring(0,6)!="Casilla"){
+                        if(cont==null&& !matriz[i][j].getNombre().substring(0,7).equals("Casilla")){
                             cont=matriz[i][j];
-                            System.out.println();
+                            System.out.println(cont.getNombre());
                         }
                         else
-                            if(matriz[i][j].getNombre().substring(0,6)=="Casilla"){
+                            if(matriz[i][j].getNombre().substring(0,7).equals("Casilla")){
+                                matriz[i][j]=null;
                                 matriz[i][j]=cont;
+                                System.out.println(j+i+matriz[i][j].getNombre());
                                 cont=null;
                             }
                         break;
