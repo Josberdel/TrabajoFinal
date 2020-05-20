@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Alfil extends Pieza {
-    public Alfil(boolean color, Vector2 posicion, Texture texture) {
-        super(color, posicion, texture);
+    public Alfil(String nombre, boolean color, Vector2 posicion, Texture texture) {
+        super(nombre,color, posicion, texture);
 
     }
 

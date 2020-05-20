@@ -6,10 +6,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Dama  extends Pieza {
 
-    public Dama(boolean color, Vector2 posicion, Texture texture, int cont) {
-            super(color, posicion, texture);
+    public Dama(String nombre, boolean color, Vector2 posicion, Texture texture) {
+        super(nombre,color, posicion, texture);
 
-        }
+    }
 
 
         public void movimiento(){

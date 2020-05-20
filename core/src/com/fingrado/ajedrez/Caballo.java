@@ -10,8 +10,8 @@ public class Caballo extends Pieza {
     int i=0;
     int j=0;
    // ArrayList<posicion>
-    public Caballo(boolean color, Vector2 posicion, Texture texture) {
-        super(color, posicion, texture);
+    public Caballo(String nombre, boolean color, Vector2 posicion, Texture texture) {
+        super(nombre,color, posicion, texture);
 
     }
 

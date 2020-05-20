@@ -5,11 +5,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Peon extends Pieza {
-    int cont=0;
+    int cont;
 
-    public Peon(boolean color, Vector2 posicion, Texture texture, int cont) {
-        super(color, posicion, texture);
-        this.cont = cont;
+    public Peon(String nombre, boolean color, Vector2 posicion, Texture texture) {
+        super(nombre,color, posicion, texture);
+        this.cont = 0;
         }
 
 
