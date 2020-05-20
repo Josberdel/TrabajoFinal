@@ -108,10 +108,10 @@ public class GameScreen implements Screen , InputProcessor {
                         pieza = new Peon("PeonB"+i+j,true, new Vector2(x, y),peonBlanco);
                         break;
                     case "B":
-                        pieza = new Casilla("Casilla",false, new Vector2(x, y),texturaCasillaBlanca);
+                        pieza = new Casilla("CasillaB"+i+j,false, new Vector2(x, y),texturaCasillaBlanca);
                         break;
                     case "N":
-                        pieza = new Casilla("Casilla",true, new Vector2(x, y),texturaCasillaNegra);
+                        pieza = new Casilla("CasillaN"+i+j,true, new Vector2(x, y),texturaCasillaNegra);
                         break;
                     }
                 matriz[i][j] = pieza;
@@ -144,16 +144,21 @@ public class GameScreen implements Screen , InputProcessor {
     }
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Rectangle rect = new Rectangle(screenX,screenY ,5,5 );
+        Rectangle rect = new Rectangle(screenX,screenY ,1,1 );
         for(i=0;i<8;i++){
                 for(j=0;j<8;j++){
                     if(rect.overlaps(matriz[i][j].rect))
                     {
-                        System.out.println(i+""+j);
-                        System.out.println(matriz[i][j].getNombre());
-                        System.out.println(matriz[i][j].isColor());
-
-                
+                        j=7-j;
+                        if(cont==null&&matriz[i][j].getNombre().substring(0,6)!="Casilla"){
+                            cont=matriz[i][j];
+                            System.out.println();
+                        }
+                        else
+                            if(matriz[i][j].getNombre().substring(0,6)=="Casilla"){
+                                matriz[i][j]=cont;
+                                cont=null;
+                            }
                         break;
                     }
                 }
