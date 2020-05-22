@@ -21,7 +21,7 @@ public class GameScreen implements Screen , InputProcessor {
     int pos=0;
     Pieza cont =null;
     int Contador_tablas;
-
+    int ayuda=0;
     private ArrayList<Peon> peonsBlancos;
     private ArrayList<Peon>peonsNegros;
     Pieza matriz[][] = new Pieza[8][8];
@@ -66,11 +66,12 @@ public class GameScreen implements Screen , InputProcessor {
         int j = 7;
         FileHandle file = Gdx.files.internal("piezasStauton/tablero.txt");
         String levelInfo= file.readString();
-        String  [] filas = levelInfo.split("\n" );
+       // String  [] filas = levelInfo.split("\n" );
         Pieza pieza = null;
-        for (String fila : filas){
-            String[] casillas = fila.split(",");
+       // for (String fila : filas){
+            String[] casillas = levelInfo.split(",");
             for (String casilla :casillas){
+                ayuda++;
                 switch (casilla){
                     case "TN":
                         pieza = new Torre("TorreN"+i+j,false, new Vector2(x, y),torreNegra);
@@ -119,12 +120,14 @@ public class GameScreen implements Screen , InputProcessor {
                 System.out.println("matriz "+i+" "+j+" "+matriz[i][j].getNombre());
                 i += 1;
                 x += 60;
+           // }
+                if(ayuda%8==0){
+                    y -= 60;
+                    j -= 1;
+                    x = 0;
+                    i = 0;
+                }
             }
-            y -= 60;
-            j -= 1;
-            x = 0;
-            i = 0;
-        }
     }
     @Override
     public void render(float delta){
@@ -154,7 +157,7 @@ public class GameScreen implements Screen , InputProcessor {
                     {
                         j=7-j;
                         if(cont==null&& !matriz[i][j].getNombre().substring(0,5).equals("Casil")){
-
+                         
                             cont=matriz[i][j];
                             System.out.println(cont.getNombre());
                             break;
@@ -162,6 +165,7 @@ public class GameScreen implements Screen , InputProcessor {
                         else
                             if(matriz[i][j].getNombre().substring(0,5).equals("Casil")){
                                 matriz[i][j]=cont;
+
                                 System.out.println(j+i+matriz[i][j].getNombre());
                                 cont=null;
                                 break;
