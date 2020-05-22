@@ -153,7 +153,8 @@ public class GameScreen implements Screen , InputProcessor {
                     if(rect.overlaps(matriz[i][j].rect))
                     {
                         j=7-j;
-                        if(cont==null&& !matriz[i][j].getNombre().substring(0,5).equals("Casil"))
+                        if(cont==null&& !matriz[i][j].getNombre().substring(0,5).equals("Casil")){
+
                             cont=matriz[i][j];
                             System.out.println(cont.getNombre());
                             break;
