@@ -47,7 +47,8 @@ public class GameScreen implements Screen , InputProcessor {
     private boolean negro = false;
     int x = Gdx.graphics.getWidth()/2- texturaCasillaNegra.getWidth()*4;
     int y = Gdx.graphics.getHeight()/2- texturaCasillaNegra.getHeight()*4;
-
+    int pos1=0;
+    int pos2=0;
     @Override
     public void show() {
         batch = new SpriteBatch();
@@ -143,6 +144,7 @@ public class GameScreen implements Screen , InputProcessor {
         }
         batch.end();
     }
+    //ActorGestureListener
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Rectangle rect = new Rectangle(screenX,screenY ,1,1 );
@@ -151,18 +153,19 @@ public class GameScreen implements Screen , InputProcessor {
                     if(rect.overlaps(matriz[i][j].rect))
                     {
                         j=7-j;
-                        if(cont==null&& !matriz[i][j].getNombre().substring(0,5).equals("Casil")){
+                        if(cont==null&& !matriz[i][j].getNombre().substring(0,5).equals("Casil"))
                             cont=matriz[i][j];
                             System.out.println(cont.getNombre());
+                            break;
                         }
                         else
                             if(matriz[i][j].getNombre().substring(0,5).equals("Casil")){
-                                matriz[i][j]=null;
                                 matriz[i][j]=cont;
                                 System.out.println(j+i+matriz[i][j].getNombre());
                                 cont=null;
+                                break;
                             }
-                        break;
+
                     }
                 }
             }
