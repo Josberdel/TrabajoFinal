@@ -12,6 +12,7 @@ public class Pieza {
     private Texture texture;
     public   Rectangle rect;
     public String nombre;
+    int cont;
 
     public Pieza(String nombre, boolean color, Vector2 posicion, Texture texture) {
         this.nombre=nombre;
@@ -19,6 +20,7 @@ public class Pieza {
         this.posicion = posicion;
         this.texture = texture;
         rect = new Rectangle(posicion.x, posicion.y, texture.getWidth(), texture.getHeight());
+        this.cont = 0;
     }
 
     public boolean isColor() {
@@ -53,5 +55,9 @@ public class Pieza {
         this.texture = texture;
     }
 
-    public void pintar(SpriteBatch batch) { batch.draw(getTexture(), getPosicion().x, getPosicion().y); }
-}
+    public void pintar(SpriteBatch batch) { batch.draw(getTexture(), getPosicion().x, getPosicion().y);}
+
+    public int getCont(){return cont;}
+
+    public void setCont(int cont) {this.cont = cont;}
+    }

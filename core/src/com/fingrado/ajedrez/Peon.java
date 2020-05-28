@@ -12,17 +12,4 @@ public class Peon extends Pieza {
         this.cont = 0;
         }
 
-
-    public void movimiento(){
-        if(cont<=0){
-            //selecciona una arriba y dos
-        }
-        else {
-
-            //selecciona uno arriba
-        }
-    }
-    public void mover(){
-
-    }
 }

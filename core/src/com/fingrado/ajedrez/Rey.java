@@ -13,6 +13,14 @@ public class Rey extends Pieza {
 
 
 
+    public int getCont() {
+        return cont;
+    }
+
+    public void setCont(int cont) {
+        this.cont = cont;
+    }
+
     public void movimiento(){
 
     }

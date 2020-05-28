@@ -12,10 +12,11 @@ public class Torre extends Pieza {
     }
 
 
-    public void movimiento(){
-
+    public int getCont() {
+        return cont;
     }
-    public void mover(){
 
+    public void setCont(int cont) {
+        this.cont = cont;
     }
 }
