@@ -180,10 +180,9 @@ public class GameScreen implements Screen, InputProcessor {
                                     moverAlfil();
                                     break;
                                 case "Torre":
-                                    moverTorre();
+                                    moverTorre(cont, i, j);
                                     break;
                                 case "PeonN":
-
                                     moverPeonN(cont, i, j);
                                     break;
                                 case "PeonB":
@@ -200,13 +199,13 @@ public class GameScreen implements Screen, InputProcessor {
                         System.out.println(posibles);
                         try {
                             if (posibles.contains(String.valueOf(i) + String.valueOf(j))) {
-
                                 cont.setPosicion(new Vector2(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y));
                                 matriz[i][j] = cont;
                                 System.out.println(j + i + matriz[i][j].getNombre());
                                 cont = null;
                                 posibles.clear();
                                 turno= !turno;
+
                             } else {
                                 System.out.println("movimiento invalido ");
                             }
@@ -244,6 +243,7 @@ public class GameScreen implements Screen, InputProcessor {
         }catch (IndexOutOfBoundsException e){
 
         }
+        posibles.add(String.valueOf(i)+String.valueOf(j));
         peon.setCont(peon.getCont()+1);
     }
     public void moverPeonN(Pieza peon, int i,int j){
@@ -254,17 +254,43 @@ public class GameScreen implements Screen, InputProcessor {
                 posibles.add(i + String.valueOf(j - 2));
             }
         }
-        if(matriz[i+1][j+1].isColor()!=peon.isColor()&&matriz[i+1][j-1].getNombre()!="Casilla"){
-            posibles.add(String.valueOf(i+1)+String.valueOf(j-1));
+        try{
+            if(matriz[i+1][j+1].isColor()!=peon.isColor()&&matriz[i+1][j-1].getNombre()!="Casilla"){
+                posibles.add(String.valueOf(i+1)+String.valueOf(j-1));
+            }
+        }catch (IndexOutOfBoundsException e){
+
         }
-        if(matriz[i+1][j-1].isColor()!=peon.isColor()&&matriz[i-1][j-1].getNombre()!="Casilla"){
-            posibles.add(String.valueOf(i-1)+String.valueOf(j-1));
+        try {
+            if (matriz[i + 1][j - 1].isColor() != peon.isColor() && matriz[i - 1][j - 1].getNombre() != "Casilla") {
+                posibles.add(String.valueOf(i - 1) + String.valueOf(j - 1));
+            }
+        }catch(IndexOutOfBoundsException e){
+
         }
         posibles.add(String.valueOf(i)+String.valueOf(j));
         peon.setCont(peon.getCont()+1);
     }
-    public void  moverTorre(){
+    public void  moverTorre(Pieza torre, int i,int j){
+        for(int a=i;a<8;a++){
+            try{
+                if(matriz[a+1][j].isColor()!=torre.isColor()&&matriz[a+1][j].getNombre()!="Casilla"){
+                    posibles.add(String.valueOf(a+1)+String.valueOf(j));
+                }
+            }catch (IndexOutOfBoundsException e){
+        }
+        for(int a=i;a>0;a--){
 
+        }
+        for(int a=j;a>8;a++){
+
+        }
+        for(int a=i;a<8;a--){
+
+        }
+
+        posibles.add(String.valueOf(i)+String.valueOf(j));
+        torre.setCont(torre.getCont()+1);
     }
     public void  moverRey(){
 
