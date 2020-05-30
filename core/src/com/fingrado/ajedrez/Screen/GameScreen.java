@@ -63,7 +63,7 @@ public class GameScreen implements Screen, InputProcessor {
         int y = Gdx.graphics.getHeight() - 60;
         int i = 0;
         int j = 7;
-        FileHandle file = Gdx.files.internal("Posiciones/peon.txt");
+        FileHandle file = Gdx.files.internal("Posiciones/tablero.txt");
         String levelInfo = file.readString();
         // String [] filas = levelInfo.split("\n" );
         Pieza pieza = null;
@@ -168,13 +168,14 @@ public class GameScreen implements Screen, InputProcessor {
                             System.out.println("Pieza seleccionada " + cont.getNombre());
                             switch (cont.getNombre()) {
                                 case "Rey":
-                                    moverRey();
+                                    moverRey(cont, i, j);
                                     break;
                                 case "Dama":
-                                    moverDama();
+                                    moverTorre(cont, i, j);
+                                    moverAlfil(cont, i, j);
                                     break;
                                 case "Caballo":
-                                    moverCaballo();
+                                    moverCaballo(cont, i, j);
                                     break;
                                 case "Alfil":
                                     moverAlfil(cont, i, j);
@@ -326,11 +327,15 @@ public class GameScreen implements Screen, InputProcessor {
         torre.setCont(torre.getCont()+1);
         System.out.println(posibles);
     }
-    public void  moverRey(){
-
-    }
-    public void  moverDama(){
-
+    public void  moverRey(Pieza Rey ,int  i,int  j){
+        for(int a=-1;a<2;a++){
+            for (int b=-1;b<2;b++){
+                try{
+                posibles.add(String.valueOf(a) + String.valueOf(j));
+                }catch (IndexOutOfBoundsException e){
+                }
+            }
+        }
     }
     public void  moverAlfil(Pieza alfil,int i ,int j) {
         for (int a = 1; a < 8; a++) {
@@ -387,8 +392,47 @@ public class GameScreen implements Screen, InputProcessor {
         }
         posibles.add(String.valueOf(i) + String.valueOf(j));
     }
-    public void  moverCaballo(){
-
+    public void  moverCaballo(Pieza caballo, int  i,int  j){
+        try{
+            if (matriz[i +1 ][j +2 ].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor())
+                posibles.add(String.valueOf(i +2) + String.valueOf(j +1 ));
+        }catch (IndexOutOfBoundsException e) {
+        }
+        try{
+            if (matriz[i +2][j +1 ].getNombre().equals("Casilla")||matriz[i +1 ][j +2 ].isColor() != caballo.isColor())
+                posibles.add(String.valueOf(i+1) + String.valueOf(j+2));
+        }catch (IndexOutOfBoundsException e) {
+        }
+        try{
+            if (matriz[i+2 ][j -1 ].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor())
+                posibles.add(String.valueOf(i +2) + String.valueOf(j +1 ));
+        }catch (IndexOutOfBoundsException e) {
+        }
+        try{
+            if (matriz[i +1 ][j -2 ].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor())
+                posibles.add(String.valueOf(i+1) + String.valueOf(j+2));
+        }catch (IndexOutOfBoundsException e) {
+        }
+        try{
+            if (matriz[i -1][j-2].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor())
+                posibles.add(String.valueOf(i +2) + String.valueOf(j +1 ));
+        }catch (IndexOutOfBoundsException e) {
+        }
+        try{
+            if (matriz[i -2][j -1].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor())
+                posibles.add(String.valueOf(i+1) + String.valueOf(j+2));
+        }catch (IndexOutOfBoundsException e) {
+        }
+        try{
+            if (matriz[i -2 ][j +1 ].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor())
+                posibles.add(String.valueOf(i +2) + String.valueOf(j +1 ));
+        }catch (IndexOutOfBoundsException e) {
+        }
+        try{
+            if (matriz[i -1 ][j +2 ].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor())
+                posibles.add(String.valueOf(i+1) + String.valueOf(j+2));
+        }catch (IndexOutOfBoundsException e) {
+        }
     }
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
