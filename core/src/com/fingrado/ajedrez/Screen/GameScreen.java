@@ -74,13 +74,13 @@ public class GameScreen implements Screen, InputProcessor {
             ayuda++;
             switch (casilla) {
                 case "TN":
-                    pieza = new Torre("Torre" + i + j, false, new Vector2(x, y), torreNegra);
+                    pieza = new Torre("Torre", false, new Vector2(x, y), torreNegra);
                     break;
                 case "CN":
                     pieza = new Caballo("Caballo" + i + j, false, new Vector2(x, y), caballoNegro);
                     break;
                 case "AN":
-                    pieza = new Alfil("Alfil" + i + j, false, new Vector2(x, y), alfilNegro);
+                    pieza = new Alfil("Alfil", false, new Vector2(x, y), alfilNegro);
                     break;
                 case "DN":
                     pieza = new Dama("Dama", false, new Vector2(x, y), damaNegra);
@@ -92,13 +92,13 @@ public class GameScreen implements Screen, InputProcessor {
                     pieza = new Peon("PeonN", false, new Vector2(x, y), peonNegro);
                     break;
                 case "TB":
-                    pieza = new Torre("Torre" + i + j, true, new Vector2(x, y), torreBlanca);
+                    pieza = new Torre("Torre" , true, new Vector2(x, y), torreBlanca);
                     break;
                 case "CB":
-                    pieza = new Caballo("Caballo" + i + j, true, new Vector2(x, y), caballoBlanco);
+                    pieza = new Caballo("Caballo", true, new Vector2(x, y), caballoBlanco);
                     break;
                 case "AB":
-                    pieza = new Alfil("Alfil" + i + j, true, new Vector2(x, y), alfilBlanco);
+                    pieza = new Alfil("Alfil" , true, new Vector2(x, y), alfilBlanco);
                     break;
                 case "DB":
                     pieza = new Dama("Dama", true, new Vector2(x, y), damaBlanca);
@@ -153,7 +153,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Rectangle rect = new Rectangle(screenX, screenY, 5, 5);
+        Rectangle rect = new Rectangle(screenX, screenY, 10, 10);
         for (i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
                 if (rect.overlaps(matriz[i][j].rect)) {
@@ -177,7 +177,7 @@ public class GameScreen implements Screen, InputProcessor {
                                     moverCaballo();
                                     break;
                                 case "Alfil":
-                                    moverAlfil();
+                                    moverAlfil(cont, i, j);
                                     break;
                                 case "Torre":
                                     moverTorre(cont, i, j);
@@ -272,25 +272,59 @@ public class GameScreen implements Screen, InputProcessor {
         peon.setCont(peon.getCont()+1);
     }
     public void  moverTorre(Pieza torre, int i,int j){
-        for(int a=i;a<8;a++){
+        for(int a=j+1;a<8;a++){
             try{
-                if(matriz[a+1][j].isColor()!=torre.isColor()&&matriz[a+1][j].getNombre()!="Casilla"){
-                    posibles.add(String.valueOf(a+1)+String.valueOf(j));
+                if(matriz[i][a].getNombre().equals("Casilla")){
+                    posibles.add(String.valueOf(i)+String.valueOf(a));
+                }
+                else{
+                    if(matriz[i][a].isColor()!=torre.isColor())
+                        posibles.add(String.valueOf(i)+String.valueOf(a));
+                    break;
                 }
             }catch (IndexOutOfBoundsException e){
+            }
         }
-        for(int a=i;a>0;a--){
-
+        for(int a=j-1;a>=0;a--){
+            try{
+                if(matriz[i][a].getNombre().equals("Casilla")){
+                    posibles.add(String.valueOf(i)+String.valueOf(a));
+                }
+                else{
+                    if(matriz[i][a].isColor()!=torre.isColor())
+                        posibles.add(String.valueOf(i)+String.valueOf(a));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e){
+            }
         }
-        for(int a=j;a>8;a++){
-
+        for(int a=i+1;a<=8;a++){
+            try {
+                if (matriz[a][j].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(a) + String.valueOf(j));
+                } else {
+                    if (matriz[a][j].isColor() != torre.isColor())
+                    posibles.add(String.valueOf(a) + String.valueOf(j));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e){
+            }
         }
-        for(int a=i;a<8;a--){
-
-        }
-
+        for(int a=i-1;a>=0;a--){
+            try {
+                if (matriz[a][j].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(a) + String.valueOf(j));
+                } else {
+                    if (matriz[a][j].isColor() != torre.isColor())
+                        posibles.add(String.valueOf(a) + String.valueOf(j));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e){
+            }
+            }
         posibles.add(String.valueOf(i)+String.valueOf(j));
         torre.setCont(torre.getCont()+1);
+        System.out.println(posibles);
     }
     public void  moverRey(){
 
@@ -298,13 +332,64 @@ public class GameScreen implements Screen, InputProcessor {
     public void  moverDama(){
 
     }
-    public void  moverAlfil(){
-
+    public void  moverAlfil(Pieza alfil,int i ,int j) {
+        for (int a = 1; a < 8; a++) {
+            try {
+                if (matriz[i + a][j + a].getNombre().equals("Casilla")) {
+                        posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
+                }
+                else {
+                    if (matriz[i + a][j + a].isColor() != alfil.isColor())
+                        posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
+                    break;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                break;
+            }
+        }
+        for (int a = 1; a < 8; a++) {
+            try{
+                if (matriz[i + a][j - a].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(i + a) + String.valueOf(j - a));
+                }
+                else {
+                    if (matriz[i + a][j - a].isColor() != alfil.isColor())
+                        posibles.add(String.valueOf(i + a) + String.valueOf(j - a));
+                    break;
+                }
+            } catch (IndexOutOfBoundsException e) {
+            }
+        }
+        for (int a = 1; a < 8; a++) {
+            try {
+                if (matriz[i - a][j + a].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
+                } else {
+                    if (matriz[i - a][j + a].isColor() != alfil.isColor())
+                        posibles.add(String.valueOf(i - a) + String.valueOf(j + a));
+                    break;
+                }
+            } catch (IndexOutOfBoundsException e) {
+            }
+        }
+        for (int a = 1; a < 8; a++) {
+            try{
+                if (matriz[i - a][j - a].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(i - a) + String.valueOf(j - a));
+                }
+                else {
+                    if (matriz[i - a][j - a].isColor() != alfil.isColor())
+                        posibles.add(String.valueOf(i - a) + String.valueOf(j - a));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e) {
+            }
+        }
+        posibles.add(String.valueOf(i) + String.valueOf(j));
     }
     public void  moverCaballo(){
 
     }
-
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         return false;
@@ -363,21 +448,5 @@ public class GameScreen implements Screen, InputProcessor {
     public void hide() {
     }
 }
-/* if (cont == null && !matriz[i][j].getNombre().substring(0, 5).equals("Casil")) {
-                        cont = matriz[i][j];
-                        matriz[i][j] = new Casilla("CasillaB"+i+j,false, new Vector2(cont.getPosicion().x, cont.getPosicion().y),texturaCasillaBlanca);
-                        System.out.println(cont.getNombre());
-                        break;
-                    }
-                    else if (cont != null && matriz[i][j].getNombre().substring(0, 5).equals("Casil")) {
-                        matriz[i][j] = cont;
-                        matriz[i][j] = new Casilla("CasillaB"+i+j,false, new Vector2(cont.getPosicion().x, cont.getPosicion().y),texturaCasillaBlanca);
-                        cont = null;
-                        System.out.println(matriz[i][j].getNombre() + i + " " + j);
 
-                        break;
-                    } else {
-                        System.out.println(
-                                "hay una pieza en la posicion" + i + " " + j + "es" + matriz[i][j].getNombre());
-                        break;
-                    }*/
+
