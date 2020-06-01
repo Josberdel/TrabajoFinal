@@ -63,7 +63,7 @@ public class GameScreen implements Screen, InputProcessor {
         int y = Gdx.graphics.getHeight() - 60;
         int i = 0;
         int j = 7;
-        FileHandle file = Gdx.files.internal("Posiciones/tablero.txt");
+        FileHandle file = Gdx.files.internal("Posiciones/Alfil.txt");
         String levelInfo = file.readString();
         // String [] filas = levelInfo.split("\n" );
         Pieza pieza = null;
@@ -202,10 +202,15 @@ public class GameScreen implements Screen, InputProcessor {
                             if (posibles.contains(String.valueOf(i) + String.valueOf(j))) {
                                 cont.setPosicion(new Vector2(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y));
                                 matriz[i][j] = cont;
-                                System.out.println(j + i + matriz[i][j].getNombre());
+                                System.out.println(i + j + matriz[i][j].getNombre());
+
+                                if(!posibles.get(posibles.size()-1).equals((String.valueOf(i)+String.valueOf(j)))){
+                                    turno= !turno;
+                                    cont.setCont(cont.getCont()-1);
+                                    System.out.println(posibles.get(posibles.size()-1)+" "+String.valueOf(i)+String.valueOf(j));
+                                }
                                 cont = null;
                                 posibles.clear();
-                                turno= !turno;
 
                             } else {
                                 System.out.println("movimiento invalido ");
@@ -368,7 +373,7 @@ public class GameScreen implements Screen, InputProcessor {
         for (int a = 1; a < 8; a++) {
             try {
                 if (matriz[i - a][j + a].getNombre().equals("Casilla")) {
-                    posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
+                    posibles.add(String.valueOf(i - a) + String.valueOf(j + a));
                 } else {
                     if (matriz[i - a][j + a].isColor() != alfil.isColor())
                         posibles.add(String.valueOf(i - a) + String.valueOf(j + a));
@@ -433,6 +438,7 @@ public class GameScreen implements Screen, InputProcessor {
                 posibles.add(String.valueOf(i+1) + String.valueOf(j+2));
         }catch (IndexOutOfBoundsException e) {
         }
+        posibles.add(String.valueOf(i) + String.valueOf(j));
     }
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
