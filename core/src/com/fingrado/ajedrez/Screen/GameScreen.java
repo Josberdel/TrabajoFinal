@@ -63,7 +63,7 @@ public class GameScreen implements Screen, InputProcessor {
         int y = Gdx.graphics.getHeight() - 60;
         int i = 0;
         int j = 7;
-        FileHandle file = Gdx.files.internal("Posiciones/Alfil.txt");
+        FileHandle file = Gdx.files.internal("Posiciones/Rey.txt");
         String levelInfo = file.readString();
         // String [] filas = levelInfo.split("\n" );
         Pieza pieza = null;
@@ -336,11 +336,13 @@ public class GameScreen implements Screen, InputProcessor {
         for(int a=-1;a<2;a++){
             for (int b=-1;b<2;b++){
                 try{
-                posibles.add(String.valueOf(a) + String.valueOf(j));
+                    System.out.println(matriz[i][j]);
+                    posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
                 }catch (IndexOutOfBoundsException e){
                 }
             }
         }
+        posibles.add(String.valueOf(i) + String.valueOf(j));
     }
     public void  moverAlfil(Pieza alfil,int i ,int j) {
         for (int a = 1; a < 8; a++) {
