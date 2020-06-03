@@ -4,20 +4,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
 import com.fingrado.ajedrez.*;
 
 import java.util.ArrayList;
 
 public class GameScreen implements Screen, InputProcessor {
+    private BitmapFont font = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
     SpriteBatch batch;
     int i = 0;
     int j = 0;
-    int pos = 0;
     Pieza cont = null;
     boolean turno=true;
     int Contador_tablas;
@@ -43,9 +46,6 @@ public class GameScreen implements Screen, InputProcessor {
     private Texture damaNegra = new Texture("piezasStauton/damaNegra.PNG");
     private Texture reyBlanco = new Texture("piezasStauton/reyBlanco.PNG");
     private Texture reyNegro = new Texture("piezasStauton/reyNegro.PNG");
-    private Texture texturaMover = new Texture("piezasStauton/mover.PNG");
-
-
 
     @Override
     public void show() {
@@ -53,7 +53,7 @@ public class GameScreen implements Screen, InputProcessor {
         piezas = new ArrayList<>();
        posibles= new ArrayList<>();
        cargarTableroInicial();
-        Gdx.input.setInputProcessor(this);
+       Gdx.input.setInputProcessor(this);
 
     }
 
@@ -148,6 +148,11 @@ public class GameScreen implements Screen, InputProcessor {
             }
 
         }
+         font.setColor(Color.RED);
+        if(turno==true)
+            font.draw(batch,"turno de las blancas",Gdx.graphics.getWidth()-140,60);
+        else
+            font.draw(batch,"turno de las negras",Gdx.graphics.getWidth()-140,60);
         batch.end();
     }
 
@@ -207,7 +212,6 @@ public class GameScreen implements Screen, InputProcessor {
                                 if(!posibles.get(posibles.size()-1).equals((String.valueOf(i)+String.valueOf(j)))){
                                     turno= !turno;
                                     cont.setCont(cont.getCont()-1);
-                                    System.out.println(posibles.get(posibles.size()-1)+" "+String.valueOf(i)+String.valueOf(j));
                                 }
                                 cont = null;
                                 posibles.clear();
@@ -218,7 +222,6 @@ public class GameScreen implements Screen, InputProcessor {
                         } catch (NullPointerException e) {
                             System.out.println("No tienes ninguna pieza seleccionada");
                         }
-
                     }
                     break;
                 }
@@ -243,7 +246,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         }
         try{
-            if(matriz[i+1][j-1].isColor()!=peon.isColor()&&matriz[i-1][j+1].getNombre()!="Casilla"){
+            if(matriz[i-1][j+1].isColor()!=peon.isColor()&&matriz[i-1][j+1].getNombre()!="Casilla"){
                 posibles.add(String.valueOf(i-1)+String.valueOf(j+1));
             }
         }catch (IndexOutOfBoundsException e){
@@ -261,14 +264,14 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
         try{
-            if(matriz[i+1][j+1].isColor()!=peon.isColor()&&matriz[i+1][j-1].getNombre()!="Casilla"){
+            if(matriz[i+1][j-1].isColor()!=peon.isColor()&&matriz[i+1][j-1].getNombre()!="Casilla"){
                 posibles.add(String.valueOf(i+1)+String.valueOf(j-1));
             }
         }catch (IndexOutOfBoundsException e){
 
         }
         try {
-            if (matriz[i + 1][j - 1].isColor() != peon.isColor() && matriz[i - 1][j - 1].getNombre() != "Casilla") {
+            if (matriz[i - 1][j - 1].isColor() != peon.isColor() && matriz[i - 1][j - 1].getNombre() != "Casilla") {
                 posibles.add(String.valueOf(i - 1) + String.valueOf(j - 1));
             }
         }catch(IndexOutOfBoundsException e){
@@ -310,7 +313,7 @@ public class GameScreen implements Screen, InputProcessor {
                     posibles.add(String.valueOf(a) + String.valueOf(j));
                 } else {
                     if (matriz[a][j].isColor() != torre.isColor())
-                    posibles.add(String.valueOf(a) + String.valueOf(j));
+                        posibles.add(String.valueOf(a) + String.valueOf(j));
                     break;
                 }
             }catch (IndexOutOfBoundsException e){
@@ -327,7 +330,7 @@ public class GameScreen implements Screen, InputProcessor {
                 }
             }catch (IndexOutOfBoundsException e){
             }
-            }
+        }
         posibles.add(String.valueOf(i)+String.valueOf(j));
         torre.setCont(torre.getCont()+1);
         System.out.println(posibles);
@@ -348,7 +351,7 @@ public class GameScreen implements Screen, InputProcessor {
         for (int a = 1; a < 8; a++) {
             try {
                 if (matriz[i + a][j + a].getNombre().equals("Casilla")) {
-                        posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
+                    posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
                 }
                 else {
                     if (matriz[i + a][j + a].isColor() != alfil.isColor())
