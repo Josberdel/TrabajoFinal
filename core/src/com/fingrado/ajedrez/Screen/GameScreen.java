@@ -358,7 +358,7 @@ public class GameScreen implements Screen, InputProcessor {
         for(int a=-1;a<2;a++){
             for (int b=-1;b<2;b++){
                 try{
-                    if(matriz[i+a][j+b].getNombre().equals("Casilla"))
+                    if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor())
                         posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
                     else
                         System.out.println(matriz[i+a][j+b].getNombre());
