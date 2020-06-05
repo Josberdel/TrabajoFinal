@@ -163,26 +163,19 @@ public class GameScreen implements Screen, InputProcessor {
         Rectangle rect = new Rectangle(screenX, screenY, 10, 10);
         for (i = 0; i < 8; i++) {
             for (j = 7; j > -1; j--) {
-                System.out.println(i+" "+j+matriz[i][j].rect+" "+matriz[i][j].getPosicion());
+
                 if (rect.overlaps(matriz[i][j].rect)) {
                     j=7-j;
-                    System.out.println(i+" "+j+" dentro de overlaps");
-                    System.out.println(matriz[i][j].getNombre());
-                    System.out.println(matriz[i][j].rect);
                     if (cont == null && !matriz[i][j].getNombre().equals("Casilla")) {
                         System.out.println(i+" "+j+" dentro de equals");
                         if (turno == matriz[i][j].isColor()) {
                             cont = matriz[i][j];
-                            System.out.println(i+" "+j);
                             if ((i + j) % 2 == 0){
                                 matriz[i][j] = new Casilla("Casilla" , false, new Vector2(cont.getPosicion().x, cont.getPosicion().y), texturaCasillaNegra);
-                                System.out.println(matriz[i][j].getNombre()+" en "+i+" "+j);
                             }
                             else{
                                 matriz[i][j] = new Casilla("Casilla", true, new Vector2(cont.getPosicion().x, cont.getPosicion().y), texturaCasillaBlanca);
-                                System.out.println(matriz[i][j].getNombre()+" en "+i+" "+j);
                             }
-                            System.out.println("Pieza seleccionada " + cont.getNombre());
                             switch (cont.getNombre()) {
                                 case "Rey":
                                     moverRey(cont, i, j);
@@ -212,8 +205,6 @@ public class GameScreen implements Screen, InputProcessor {
                         } else
                             System.out.println("turno rival");
                     } else {
-                        System.out.println(cont);
-                        System.out.println(posibles);
                         try {
                             if (posibles.contains(String.valueOf(i) + String.valueOf(j))) {
                                 cont.setPosicion(new Vector2(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y));
@@ -222,8 +213,22 @@ public class GameScreen implements Screen, InputProcessor {
                                 System.out.println(i +" "+ j + matriz[i][j].getNombre());
                                 matriz[i][j].rect= new Rectangle(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y,  matriz[i][j].getTexture().getWidth(), matriz[i][j].getTexture().getWidth());
                                 System.out.println(i +" "+ j + matriz[i][j].rect);
-                                if (posibles.get(posibles.size() - 1).equals((String.valueOf(i) + String.valueOf(j)))) {
+                                if(cont.getNombre()=="Rey"&&Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))-2==i){
+                                    if ((0 + j) % 2 == 0) {
+                                        matriz[0][j] = new Casilla("Casilla", false, new Vector2(i*60, j * 60), texturaCasillaNegra);
+                                        matriz[i+1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x + 60, j*60),torreBlanca );
+                                    }
+                                    else {
+                                        matriz[0][j] = new Casilla("Casilla", true, new Vector2(i*60, j * 60), texturaCasillaBlanca);
+                                        matriz[i+1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x + 60, j*60),torreNegra);
+                                    }
+                                }
+                                System.out.println(posibles);
+                                if (posibles.get(posibles.size() - 1).equals((String.valueOf(i) + String.valueOf(j)))){
+                                    if(cont.getCont()>0){
                                     cont.setCont(cont.getCont() - 1);
+                                    System.out.println(cont.getCont());
+                                    }
                                 }
                                 else
                                     turno = !turno;
@@ -355,6 +360,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     }
     public void  moverRey(Pieza Rey ,int  i,int  j){
+        int c=0;
         for(int a=-1;a<2;a++){
             for (int b=-1;b<2;b++){
                 try{
@@ -365,6 +371,26 @@ public class GameScreen implements Screen, InputProcessor {
                 }catch (IndexOutOfBoundsException e){
                 }
             }
+            if(Rey.getCont()==0){
+                System.out.println("El rey no se ha movido");
+                if(matriz[0][j].getCont()==0){
+                    for(c=1;c<4;c++){
+                        System.out.println(matriz[c][j].getNombre());
+                        if(matriz[c][j].getNombre()!="Casilla"){
+                           System.out.println(c+" "+j);
+                           break;
+                        }
+                    }
+                    if(c>3){
+                        posibles.add(String.valueOf(i-2) + String.valueOf(j));
+                    }
+                    else{
+                        System.out.println("Hay piezas en medio"+c+matriz[c][j]);
+                    }
+                }
+            }
+            else
+                System.out.println("El rey  se ha movido no puede realizar ningun enroque");
         }
         posibles.add(String.valueOf(i) + String.valueOf(j));
     }
