@@ -23,6 +23,8 @@ public class GameScreen implements Screen, InputProcessor {
     int i = 0;
     int j = 0;
     Pieza cont = null;
+    String posReyBlanco="";
+    String posReyNegro="";
     boolean turno=true;
     int Contador_tablas;
     int ayuda = 0;
@@ -117,7 +119,7 @@ public class GameScreen implements Screen, InputProcessor {
                     pieza = new Casilla("Casilla" , true, new Vector2(x, y), texturaCasillaNegra);
                     break;
                 }
-            System.out.println(pieza.getNombre());
+
             matriz[i][j] = pieza;
 
             i += 1;
@@ -142,84 +144,112 @@ public class GameScreen implements Screen, InputProcessor {
     private void actualizar() {
         comprobarTeclado();
         comprobarCoronar();
-        comprobarJaqueBlanco();
-        comprobarJaqueNegro();
+        buscaPosReyBlanco();
+        buscaPosReyNegro();
     }
 
-    private void comprobarJaqueBlanco() {
+    private void buscaPosReyBlanco() {
+        for (i = 0; i < 8; i++) {
+            for (j = 7; j > -1; j--) {
+                if(matriz[i][j].getNombre()=="Rey"&&matriz[i][j].isColor()==true){
+                   posReyBlanco = String.valueOf(i)+String.valueOf(j);
+                }
+            }
+        }
+    }
+
+    private void buscaPosReyNegro() {
+        for (i = 0; i < 8; i++) {
+            for (j = 7; j > -1; j--) {
+                if(matriz[i][j].getNombre()=="Rey"&&matriz[i][j].isColor()==false){
+                    posReyNegro= String.valueOf(i)+String.valueOf(j);
+                }
+            }
+        }
+    }
+    private ArrayList<String> comprobarJaqueBlanco() {
+        ArrayList<String> amenazasNegras=new ArrayList<>();
         for (i = 0; i < 8; i++) {
             for (j = 7; j > -1; j--) {
                 if(matriz[i][j].isColor()!=true) {
                     switch (matriz[i][j].getNombre()) {
                         case "Rey":
+                            //System.out.println("ReyN"+atacarRey(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarRey(matriz[i][j], i, j));
                             break;
                         case "Dama":
+                           //System.out.println("DamaN"+atacarTorre(matriz[i][j], i, j));
+                           // System.out.println("DamaN"+atacarAlfil(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarTorre(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Caballo":
+                            //System.out.println("CaballoN"+atacarCaballo(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarCaballo(matriz[i][j], i, j));
                             break;
                         case "Alfil":
-                            amenazasNegras.addAll(atacarAlfil(matriz[i][j], i, j));
+                           // System.out.println("AlfilN"+atacarAlfil(matriz[i][j], i, j));
+                            amenazasNegras.addAll(atacarAlfil(matriz[i][j],i,j));
                             break;
                         case "Torre":
+                           // System.out.println("TorreN"+atacarTorre(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarTorre(matriz[i][j], i, j));
                             break;
                         case "PeonN":
+                            //System.out.println("PeonN"+atacarPeonN(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarPeonN(matriz[i][j], i, j) );
                             break;
                     }
                 }
             }
         }
-        System.out.println("casillas que amezan las negras son "+amenazasNegras.size());
-        System.out.println("casillas que amezan las negras son "+amenazasNegras);
         Set<String> hashSet = new HashSet<String>(amenazasNegras);
         amenazasNegras.clear();
         amenazasNegras.addAll(hashSet);
-        System.out.println("casillas que amezan las negras son "+amenazasNegras.size());
         Collections.sort(amenazasNegras);
-        System.out.println("casillas que amezan las negras son "+amenazasNegras);
+        return amenazasNegras;
     }
-    private void comprobarJaqueNegro() {
+    private ArrayList<String> comprobarJaqueNegro() {
+        ArrayList<String> amenazasBlancas=new ArrayList<>();
         for (i = 0; i < 8; i++) {
             for (j = 7; j > -1; j--) {
-
                 if(matriz[i][j].isColor()!=false) {
                     switch (matriz[i][j].getNombre()) {
                         case "Rey":
+                            //System.out.println("ReyB"+atacarRey(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarRey(matriz[i][j], i, j));
                             break;
                         case "Dama":
+                            /*System.out.println("DamaB"+atacarTorre(matriz[i][j], i, j));
+                            System.out.println("DamaB"+atacarAlfil(matriz[i][j], i, j));*/
                             amenazasBlancas.addAll(atacarTorre(matriz[i][j], i, j));
-                            atacarAlfil(matriz[i][j], i, j);
+                            amenazasBlancas.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Caballo":
+                            //System.out.println("CaballoB"+atacarCaballo(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarCaballo(matriz[i][j], i, j));
                             break;
                         case "Alfil":
+                            //System.out.println("AlfilB"+atacarAlfil(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Torre":
+                            //System.out.println("TorreB"+atacarTorre(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarTorre(matriz[i][j], i, j));
                             break;
                         case "PeonB":
+                            //System.out.println("PeonB"+atacarPeonB(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarPeonB(matriz[i][j], i, j));
                             break;
                     }
                 }
             }
         }
-        System.out.println("casillas que amezan las blancas son "+amenazasBlancas.size());
-        System.out.println("casillas que amezan las blancas son "+amenazasBlancas);
         Set<String> hashSet = new HashSet<String>(amenazasBlancas);
         amenazasBlancas.clear();
         amenazasBlancas.addAll(hashSet);
-        System.out.println("casillas que amezan las blancas son "+amenazasBlancas.size());
         Collections.sort(amenazasBlancas);
-        System.out.println("casillas que amezan las blancas son "+amenazasBlancas);
+        return amenazasBlancas;
     }
 
     private void comprobarCoronar() {
@@ -273,7 +303,7 @@ public class GameScreen implements Screen, InputProcessor {
                 if (rect.overlaps(matriz[i][j].rect)) {
                     j=7-j;
                     if (cont == null && !matriz[i][j].getNombre().equals("Casilla")) {
-                        System.out.println(i+" "+j+" dentro de equals");
+
                         if (turno == matriz[i][j].isColor()) {
                             cont = matriz[i][j];
                             if ((i + j) % 2 == 0){
@@ -344,16 +374,46 @@ public class GameScreen implements Screen, InputProcessor {
                                         }
                                     }
                                 }
+
+                                if(turno==true) {
+                                    System.out.println(posReyBlanco);
+                                    System.out.println(comprobarJaqueBlanco());
+                                    if (comprobarJaqueBlanco().contains(posReyBlanco)) {
+                                        cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))]
+                                                [Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))].getPosicion().x,
+                                                matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))]
+                                                        [Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))].getPosicion().y));
+                                        cont.setCont(cont.getCont()-1);
+                                        matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))]=cont;
+                                        turno = !turno;
+                                    System.out.println("No puedes mover el rey blanco estaria en jaque");
+                                    }
+                                }
+                                else{
+                                    System.out.println(posReyNegro);
+                                    System.out.println(comprobarJaqueNegro());
+                                    if(comprobarJaqueNegro().contains(posReyNegro)){
+                                        cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))]
+                                                [Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))].getPosicion().x,
+                                                matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))]
+                                                        [Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))].getPosicion().y));
+
+                                        matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))]=cont;
+                                        System.out.println("No puedes mover el rey negro estaria en jaque");
+                                        turno = !turno;
+
+                                    }
+                                }
                                 if (posibles.get(posibles.size() - 1).equals((String.valueOf(i) + String.valueOf(j)))){
                                     if(cont.getCont()>0){
                                     cont.setCont(cont.getCont() - 1);
                                     }
                                 }
-                                else
+                                else{
                                     turno = !turno;
+                                }
                                 cont = null;
                                 posibles.clear();
-
                             } else {
                                 System.out.println("movimiento invalido ");
                                 System.out.println(matriz[i][j].rect);
@@ -369,11 +429,6 @@ public class GameScreen implements Screen, InputProcessor {
                     break;
                 }
 
-            }
-        }
-        for (i = 0; i < 8; i++) {
-            for (j = 7; j > -1; j--) {
-                System.out.println(i+" "+j+matriz[i][j].getNombre()+matriz[i][j].isColor()+matriz[i][j].getTexture());
             }
         }
         return false;
@@ -489,18 +544,16 @@ public class GameScreen implements Screen, InputProcessor {
                 try{
                     if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor())
                         posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
-                    else
-                        System.out.println(matriz[i+a][j+b].getNombre());
                 }catch (IndexOutOfBoundsException e){
                 }
             }
             if(Rey.getCont()==0){
-                System.out.println("El rey no se ha movido");
+
                 if(matriz[0][j].getCont()==0){
                     for(c=1;c<4;c++){
-                        System.out.println(matriz[c][j].getNombre());
+
                         if(matriz[c][j].getNombre()!="Casilla"){
-                           System.out.println(c+" "+j);
+
                            break;
                         }
                     }
@@ -513,9 +566,9 @@ public class GameScreen implements Screen, InputProcessor {
                 }
                 if(matriz[7][j].getCont()==0){
                     for(c=5;c<7;c++){
-                        System.out.println(matriz[c][j].getNombre());
+
                         if(matriz[c][j].getNombre()!="Casilla"){
-                            System.out.println(c+" "+j);
+
                             break;
                         }
                     }
@@ -660,8 +713,7 @@ public class GameScreen implements Screen, InputProcessor {
             if(matriz[i+1][j+1].getNombre().equals("Casilla")){
                 posibles.add(String.valueOf(i+1)+String.valueOf(j+1));
             }
-            else
-                System.out.println("No cumple"+matriz[i][j].getNombre());
+
         }catch (IndexOutOfBoundsException e){
 
         }
@@ -669,8 +721,7 @@ public class GameScreen implements Screen, InputProcessor {
             if(matriz[i-1][j+1].getNombre().equals("Casilla")){
                 posibles.add(String.valueOf(i-1)+String.valueOf(j+1));
             }
-            else
-                System.out.println("No cumple"+matriz[i][j].getNombre());
+
         }catch (IndexOutOfBoundsException e){
 
         }
@@ -685,8 +736,7 @@ public class GameScreen implements Screen, InputProcessor {
             if(matriz[i+1][j-1].getNombre().equals("Casilla")){
                 posibles.add(String.valueOf(i+1)+String.valueOf(j-1));
             }
-            else
-                System.out.println("No cumple"+matriz[i][j].getNombre());
+
         }catch (IndexOutOfBoundsException e){
 
         }
@@ -694,8 +744,7 @@ public class GameScreen implements Screen, InputProcessor {
             if (matriz[i - 1][j - 1].getNombre().equals("Casilla")) {
                 posibles.add(String.valueOf(i - 1) + String.valueOf(j - 1));
             }
-            else
-                System.out.println("No cumple"+matriz[i][j].getNombre());
+
         }catch(IndexOutOfBoundsException e){
 
         }
@@ -709,8 +758,7 @@ public class GameScreen implements Screen, InputProcessor {
                     posibles.add(String.valueOf(i)+String.valueOf(a));
                 }
                 else{
-                    if(matriz[i][a].isColor()!=torre.isColor())
-                        posibles.add(String.valueOf(i)+String.valueOf(a));
+                    posibles.add(String.valueOf(i)+String.valueOf(a));
                     break;
                 }
             }catch (IndexOutOfBoundsException e){
@@ -722,8 +770,7 @@ public class GameScreen implements Screen, InputProcessor {
                     posibles.add(String.valueOf(i)+String.valueOf(a));
                 }
                 else{
-                    if(matriz[i][a].isColor()!=torre.isColor())
-                        posibles.add(String.valueOf(i)+String.valueOf(a));
+                    posibles.add(String.valueOf(i)+String.valueOf(a));
                     break;
                 }
             }catch (IndexOutOfBoundsException e){
@@ -733,9 +780,9 @@ public class GameScreen implements Screen, InputProcessor {
             try {
                 if (matriz[a][j].getNombre().equals("Casilla")) {
                     posibles.add(String.valueOf(a) + String.valueOf(j));
-                } else {
-                    if (matriz[a][j].isColor() != torre.isColor())
-                        posibles.add(String.valueOf(a) + String.valueOf(j));
+                }
+                else {
+                    posibles.add(String.valueOf(a) + String.valueOf(j));
                     break;
                 }
             }catch (IndexOutOfBoundsException e){
@@ -746,14 +793,12 @@ public class GameScreen implements Screen, InputProcessor {
                 if (matriz[a][j].getNombre().equals("Casilla")) {
                     posibles.add(String.valueOf(a) + String.valueOf(j));
                 } else {
-                    if (matriz[a][j].isColor() != torre.isColor())
-                        posibles.add(String.valueOf(a) + String.valueOf(j));
+                    posibles.add(String.valueOf(a) + String.valueOf(j));
                     break;
                 }
             }catch (IndexOutOfBoundsException e){
             }
         }
-
         return posibles;
     }
     public ArrayList<String> atacarRey(Pieza Rey , int  i, int  j){
@@ -762,10 +807,7 @@ public class GameScreen implements Screen, InputProcessor {
         for(int a=-1;a<2;a++){
             for (int b=-1;b<2;b++){
                 try{
-                    if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor())
-                        posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
-                    else
-                        System.out.println(matriz[i+a][j+b].getNombre());
+                    posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
                 }catch (IndexOutOfBoundsException e){
                 }
             }
@@ -780,13 +822,11 @@ public class GameScreen implements Screen, InputProcessor {
                     posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
                 }
                 else {
-                    if (matriz[i + a][j + a].isColor() != alfil.isColor())
-                        posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
+                    posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
                     break;
                 }
             } catch (IndexOutOfBoundsException e) {
             }
-            return posibles;
         }
         for (int a = 1; a < 8; a++) {
             try{
@@ -794,8 +834,7 @@ public class GameScreen implements Screen, InputProcessor {
                     posibles.add(String.valueOf(i + a) + String.valueOf(j - a));
                 }
                 else {
-                    if (matriz[i + a][j - a].isColor() != alfil.isColor())
-                        posibles.add(String.valueOf(i + a) + String.valueOf(j - a));
+                    posibles.add(String.valueOf(i + a) + String.valueOf(j - a));
                     break;
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -806,8 +845,7 @@ public class GameScreen implements Screen, InputProcessor {
                 if (matriz[i - a][j + a].getNombre().equals("Casilla")) {
                     posibles.add(String.valueOf(i - a) + String.valueOf(j + a));
                 } else {
-                    if (matriz[i - a][j + a].isColor() != alfil.isColor())
-                        posibles.add(String.valueOf(i - a) + String.valueOf(j + a));
+                    posibles.add(String.valueOf(i - a) + String.valueOf(j + a));
                     break;
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -820,29 +858,25 @@ public class GameScreen implements Screen, InputProcessor {
                     posibles.add(String.valueOf(i - a) + String.valueOf(j - a));
                 }
                 else {
-                    if (matriz[i - a][j - a].isColor() != alfil.isColor())
-                        posibles.add(String.valueOf(i - a) + String.valueOf(j - a));
+                    posibles.add(String.valueOf(i - a) + String.valueOf(j - a));
                     break;
                 }
             }catch (IndexOutOfBoundsException e) {
             }
         }
-
-
         return posibles;
     }
     public ArrayList<String> atacarCaballo(Pieza caballo, int  i, int  j){
         ArrayList<String> posibles=new ArrayList<>();
         try{
-            if (matriz[i +1 ][j +2 ].getNombre().equals("Casilla")||matriz[i +1 ][j +2 ].isColor() != caballo.isColor()){
+            if (!matriz[i +1 ][j +2 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i +1) + String.valueOf(j +2));
-
             }
         }catch (IndexOutOfBoundsException e) {
 
         }
         try{
-            if (matriz[i +2][j +1 ].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor()){
+            if (!matriz[i +2][j +1 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i+2) + String.valueOf(j+1));
 
             }
@@ -850,34 +884,34 @@ public class GameScreen implements Screen, InputProcessor {
 
         }
         try{
-            if (matriz[i+2 ][j -1 ].getNombre().equals("Casilla")||matriz[i +2 ][j -1 ].isColor() != caballo.isColor()){
+            if (!matriz[i+2 ][j -1 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i + 2) + String.valueOf(j - 1 ));
             }
         }catch (IndexOutOfBoundsException e) {
 
         }
         try{
-            if (matriz[i +1 ][j -2 ].getNombre().equals("Casilla")||matriz[i +1 ][j -2 ].isColor() != caballo.isColor()) {
+            if (!matriz[i +1 ][j -2 ].getNombre().equals("f")) {
                 posibles.add(String.valueOf(i + 1) + String.valueOf(j - 2));
             }
         }catch (IndexOutOfBoundsException e) {
         }
         try{
-            if (matriz[i -1][j-2].getNombre().equals("Casilla")||matriz[i -1][j -2 ].isColor() != caballo.isColor()){
+            if (!matriz[i -1][j-2].getNombre().equals("f")){
                 posibles.add(String.valueOf(i -1) + String.valueOf(j -2));
             }
         }catch (IndexOutOfBoundsException e) {
 
         }
         try{
-            if (matriz[i -2][j -1].getNombre().equals("Casilla")||matriz[i -2 ][j -1 ].isColor() != caballo.isColor()){
+            if (!matriz[i -2][j -1].getNombre().equals("f")){
                 posibles.add(String.valueOf(i-2) + String.valueOf(j-1));
             }
         }catch (IndexOutOfBoundsException e) {
 
         }
         try{
-            if (matriz[i -2 ][j +1 ].getNombre().equals("Casilla")||matriz[i -2 ][j +1 ].isColor() != caballo.isColor()){
+            if (!matriz[i -2 ][j +1 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i -2) + String.valueOf(j +1 ));
 
             }
@@ -885,15 +919,13 @@ public class GameScreen implements Screen, InputProcessor {
 
         }
         try{
-            if (matriz[i -1 ][j +2 ].getNombre().equals("Casilla")||matriz[i -1 ][j +2 ].isColor() != caballo.isColor()){
+            if (!matriz[i -1 ][j +2 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i-1) + String.valueOf(j+2));
 
             }
         }catch (IndexOutOfBoundsException e) {
 
         }
-        caballo.setCont(caballo.getCont()+1);
-
     return posibles;
     }
 

@@ -68,12 +68,12 @@ public class BatallaPeones implements Screen, InputProcessor {
         batch.begin();
         for(int i=0;i<8;i++){
             if(matriz[i][0].getNombre()=="PeonN"){
-                font2.draw(batch,"ganan las negras ",Gdx.graphics.getWidth()-100,120);
+                font2.draw(batch,"ganan las negras ",Gdx.graphics.getWidth()-150,120);
             }
         }
         for(i=0;i<8;i++){
             if(matriz[i][7].getNombre()=="PeonB"){
-                font2.draw(batch,"ganan las blancas",Gdx.graphics.getWidth()-100,120);
+                font2.draw(batch,"ganan las blancas",Gdx.graphics.getWidth()-150,120);
             }
         }
         batch.end();
@@ -133,9 +133,9 @@ public class BatallaPeones implements Screen, InputProcessor {
             }
         }
         if(turno==true)
-            font.draw(batch,"turno de las blancas",Gdx.graphics.getWidth()-100,60);
+            font.draw(batch,"turno de las blancas",Gdx.graphics.getWidth()-150,60);
         else
-            font.draw(batch,"turno de las negras",Gdx.graphics.getWidth()-100,60);
+            font.draw(batch,"turno de las negras",Gdx.graphics.getWidth()-150,60);
         font3.draw(batch," r para reiniciar o Esc para salir",Gdx.graphics.getWidth()-165,180);
         batch.end();
 
