@@ -12,8 +12,10 @@ import com.badlogic.gdx.math.Vector2;
 
 import com.fingrado.ajedrez.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GameScreen implements Screen, InputProcessor {
     private BitmapFont font = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
@@ -24,8 +26,8 @@ public class GameScreen implements Screen, InputProcessor {
     boolean turno=true;
     int Contador_tablas;
     int ayuda = 0;
-    private ArrayList<Peon> peonsBlancos;
-    private ArrayList<Peon> peonsNegros;
+    private ArrayList<String> amenazasBlancas;
+    private ArrayList<String> amenazasNegras;
     private ArrayList<String> posibles;
     Pieza matriz[][] = new Pieza[8][8];
     Texture tablero[][] = new Texture[8][8];
@@ -50,10 +52,11 @@ public class GameScreen implements Screen, InputProcessor {
     public void show() {
         batch = new SpriteBatch();
         piezas = new ArrayList<>();
-       posibles= new ArrayList<>();
-       cargarTableroInicial();
-       Gdx.input.setInputProcessor(this);
-
+        posibles= new ArrayList<>();
+        amenazasBlancas = new ArrayList<>();
+        amenazasNegras = new ArrayList<>();
+        cargarTableroInicial();
+        Gdx.input.setInputProcessor(this);
     }
 
     private void cargarTableroInicial() {
@@ -139,6 +142,84 @@ public class GameScreen implements Screen, InputProcessor {
     private void actualizar() {
         comprobarTeclado();
         comprobarCoronar();
+        comprobarJaqueBlanco();
+        comprobarJaqueNegro();
+    }
+
+    private void comprobarJaqueBlanco() {
+        for (i = 0; i < 8; i++) {
+            for (j = 7; j > -1; j--) {
+                if(matriz[i][j].isColor()!=true) {
+                    switch (matriz[i][j].getNombre()) {
+                        case "Rey":
+                            amenazasNegras.addAll(atacarRey(matriz[i][j], i, j));
+                            break;
+                        case "Dama":
+                            amenazasNegras.addAll(atacarTorre(matriz[i][j], i, j));
+                            amenazasNegras.addAll(atacarAlfil(matriz[i][j], i, j));
+                            break;
+                        case "Caballo":
+                            amenazasNegras.addAll(atacarCaballo(matriz[i][j], i, j));
+                            break;
+                        case "Alfil":
+                            amenazasNegras.addAll(atacarAlfil(matriz[i][j], i, j));
+                            break;
+                        case "Torre":
+                            amenazasNegras.addAll(atacarTorre(matriz[i][j], i, j));
+                            break;
+                        case "PeonN":
+                            amenazasNegras.addAll(atacarPeonN(matriz[i][j], i, j) );
+                            break;
+                    }
+                }
+            }
+        }
+        System.out.println("casillas que amezan las negras son "+amenazasNegras.size());
+        System.out.println("casillas que amezan las negras son "+amenazasNegras);
+        Set<String> hashSet = new HashSet<String>(amenazasNegras);
+        amenazasNegras.clear();
+        amenazasNegras.addAll(hashSet);
+        System.out.println("casillas que amezan las negras son "+amenazasNegras.size());
+        Collections.sort(amenazasNegras);
+        System.out.println("casillas que amezan las negras son "+amenazasNegras);
+    }
+    private void comprobarJaqueNegro() {
+        for (i = 0; i < 8; i++) {
+            for (j = 7; j > -1; j--) {
+
+                if(matriz[i][j].isColor()!=false) {
+                    switch (matriz[i][j].getNombre()) {
+                        case "Rey":
+                            amenazasBlancas.addAll(atacarRey(matriz[i][j], i, j));
+                            break;
+                        case "Dama":
+                            amenazasBlancas.addAll(atacarTorre(matriz[i][j], i, j));
+                            atacarAlfil(matriz[i][j], i, j);
+                            break;
+                        case "Caballo":
+                            amenazasBlancas.addAll(atacarCaballo(matriz[i][j], i, j));
+                            break;
+                        case "Alfil":
+                            amenazasBlancas.addAll(atacarAlfil(matriz[i][j], i, j));
+                            break;
+                        case "Torre":
+                            amenazasBlancas.addAll(atacarTorre(matriz[i][j], i, j));
+                            break;
+                        case "PeonB":
+                            amenazasBlancas.addAll(atacarPeonB(matriz[i][j], i, j));
+                            break;
+                    }
+                }
+            }
+        }
+        System.out.println("casillas que amezan las blancas son "+amenazasBlancas.size());
+        System.out.println("casillas que amezan las blancas son "+amenazasBlancas);
+        Set<String> hashSet = new HashSet<String>(amenazasBlancas);
+        amenazasBlancas.clear();
+        amenazasBlancas.addAll(hashSet);
+        System.out.println("casillas que amezan las blancas son "+amenazasBlancas.size());
+        Collections.sort(amenazasBlancas);
+        System.out.println("casillas que amezan las blancas son "+amenazasBlancas);
     }
 
     private void comprobarCoronar() {
@@ -572,6 +653,250 @@ public class GameScreen implements Screen, InputProcessor {
         caballo.setCont(caballo.getCont()+1);
         posibles.add(String.valueOf(i) + String.valueOf(j));
     }
+
+    public ArrayList<String> atacarPeonB(Pieza peon, int i, int j){
+        ArrayList<String> posibles=new ArrayList<>();
+        try{
+            if(matriz[i+1][j+1].getNombre().equals("Casilla")){
+                posibles.add(String.valueOf(i+1)+String.valueOf(j+1));
+            }
+            else
+                System.out.println("No cumple"+matriz[i][j].getNombre());
+        }catch (IndexOutOfBoundsException e){
+
+        }
+        try{
+            if(matriz[i-1][j+1].getNombre().equals("Casilla")){
+                posibles.add(String.valueOf(i-1)+String.valueOf(j+1));
+            }
+            else
+                System.out.println("No cumple"+matriz[i][j].getNombre());
+        }catch (IndexOutOfBoundsException e){
+
+        }
+
+
+        return posibles;
+    }
+
+    public ArrayList<String> atacarPeonN(Pieza peon, int i, int j){
+        ArrayList<String> posibles=new ArrayList<>();
+        try{
+            if(matriz[i+1][j-1].getNombre().equals("Casilla")){
+                posibles.add(String.valueOf(i+1)+String.valueOf(j-1));
+            }
+            else
+                System.out.println("No cumple"+matriz[i][j].getNombre());
+        }catch (IndexOutOfBoundsException e){
+
+        }
+        try {
+            if (matriz[i - 1][j - 1].getNombre().equals("Casilla")) {
+                posibles.add(String.valueOf(i - 1) + String.valueOf(j - 1));
+            }
+            else
+                System.out.println("No cumple"+matriz[i][j].getNombre());
+        }catch(IndexOutOfBoundsException e){
+
+        }
+        return posibles;
+    }
+    public ArrayList<String> atacarTorre(Pieza torre, int i, int j){
+        ArrayList<String> posibles=new ArrayList<>();
+        for(int a=j+1;a<8;a++){
+            try{
+                if(matriz[i][a].getNombre().equals("Casilla")){
+                    posibles.add(String.valueOf(i)+String.valueOf(a));
+                }
+                else{
+                    if(matriz[i][a].isColor()!=torre.isColor())
+                        posibles.add(String.valueOf(i)+String.valueOf(a));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e){
+            }
+        }
+        for(int a=j-1;a>=0;a--){
+            try{
+                if(matriz[i][a].getNombre().equals("Casilla")){
+                    posibles.add(String.valueOf(i)+String.valueOf(a));
+                }
+                else{
+                    if(matriz[i][a].isColor()!=torre.isColor())
+                        posibles.add(String.valueOf(i)+String.valueOf(a));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e){
+            }
+        }
+        for(int a=i+1;a<=8;a++){
+            try {
+                if (matriz[a][j].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(a) + String.valueOf(j));
+                } else {
+                    if (matriz[a][j].isColor() != torre.isColor())
+                        posibles.add(String.valueOf(a) + String.valueOf(j));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e){
+            }
+        }
+        for(int a=i-1;a>=0;a--){
+            try {
+                if (matriz[a][j].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(a) + String.valueOf(j));
+                } else {
+                    if (matriz[a][j].isColor() != torre.isColor())
+                        posibles.add(String.valueOf(a) + String.valueOf(j));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e){
+            }
+        }
+
+        return posibles;
+    }
+    public ArrayList<String> atacarRey(Pieza Rey , int  i, int  j){
+        ArrayList<String> posibles=new ArrayList<>();
+        int c=0;
+        for(int a=-1;a<2;a++){
+            for (int b=-1;b<2;b++){
+                try{
+                    if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor())
+                        posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
+                    else
+                        System.out.println(matriz[i+a][j+b].getNombre());
+                }catch (IndexOutOfBoundsException e){
+                }
+            }
+        }
+        return posibles;
+    }
+    public ArrayList<String> atacarAlfil(Pieza alfil, int i , int j) {
+        ArrayList<String> posibles=new ArrayList<>();
+        for (int a = 1; a < 8; a++) {
+            try {
+                if (matriz[i + a][j + a].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
+                }
+                else {
+                    if (matriz[i + a][j + a].isColor() != alfil.isColor())
+                        posibles.add(String.valueOf(i + a) + String.valueOf(j + a));
+                    break;
+                }
+            } catch (IndexOutOfBoundsException e) {
+            }
+            return posibles;
+        }
+        for (int a = 1; a < 8; a++) {
+            try{
+                if (matriz[i + a][j - a].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(i + a) + String.valueOf(j - a));
+                }
+                else {
+                    if (matriz[i + a][j - a].isColor() != alfil.isColor())
+                        posibles.add(String.valueOf(i + a) + String.valueOf(j - a));
+                    break;
+                }
+            } catch (IndexOutOfBoundsException e) {
+            }
+        }
+        for (int a = 1; a <8; a++) {
+            try {
+                if (matriz[i - a][j + a].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(i - a) + String.valueOf(j + a));
+                } else {
+                    if (matriz[i - a][j + a].isColor() != alfil.isColor())
+                        posibles.add(String.valueOf(i - a) + String.valueOf(j + a));
+                    break;
+                }
+            } catch (IndexOutOfBoundsException e) {
+
+            }
+        }
+        for (int a = 1; a < 8; a++) {
+            try{
+                if (matriz[i - a][j - a].getNombre().equals("Casilla")) {
+                    posibles.add(String.valueOf(i - a) + String.valueOf(j - a));
+                }
+                else {
+                    if (matriz[i - a][j - a].isColor() != alfil.isColor())
+                        posibles.add(String.valueOf(i - a) + String.valueOf(j - a));
+                    break;
+                }
+            }catch (IndexOutOfBoundsException e) {
+            }
+        }
+
+
+        return posibles;
+    }
+    public ArrayList<String> atacarCaballo(Pieza caballo, int  i, int  j){
+        ArrayList<String> posibles=new ArrayList<>();
+        try{
+            if (matriz[i +1 ][j +2 ].getNombre().equals("Casilla")||matriz[i +1 ][j +2 ].isColor() != caballo.isColor()){
+                posibles.add(String.valueOf(i +1) + String.valueOf(j +2));
+
+            }
+        }catch (IndexOutOfBoundsException e) {
+
+        }
+        try{
+            if (matriz[i +2][j +1 ].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor()){
+                posibles.add(String.valueOf(i+2) + String.valueOf(j+1));
+
+            }
+        }catch (IndexOutOfBoundsException e) {
+
+        }
+        try{
+            if (matriz[i+2 ][j -1 ].getNombre().equals("Casilla")||matriz[i +2 ][j -1 ].isColor() != caballo.isColor()){
+                posibles.add(String.valueOf(i + 2) + String.valueOf(j - 1 ));
+            }
+        }catch (IndexOutOfBoundsException e) {
+
+        }
+        try{
+            if (matriz[i +1 ][j -2 ].getNombre().equals("Casilla")||matriz[i +1 ][j -2 ].isColor() != caballo.isColor()) {
+                posibles.add(String.valueOf(i + 1) + String.valueOf(j - 2));
+            }
+        }catch (IndexOutOfBoundsException e) {
+        }
+        try{
+            if (matriz[i -1][j-2].getNombre().equals("Casilla")||matriz[i -1][j -2 ].isColor() != caballo.isColor()){
+                posibles.add(String.valueOf(i -1) + String.valueOf(j -2));
+            }
+        }catch (IndexOutOfBoundsException e) {
+
+        }
+        try{
+            if (matriz[i -2][j -1].getNombre().equals("Casilla")||matriz[i -2 ][j -1 ].isColor() != caballo.isColor()){
+                posibles.add(String.valueOf(i-2) + String.valueOf(j-1));
+            }
+        }catch (IndexOutOfBoundsException e) {
+
+        }
+        try{
+            if (matriz[i -2 ][j +1 ].getNombre().equals("Casilla")||matriz[i -2 ][j +1 ].isColor() != caballo.isColor()){
+                posibles.add(String.valueOf(i -2) + String.valueOf(j +1 ));
+
+            }
+        }catch (IndexOutOfBoundsException e) {
+
+        }
+        try{
+            if (matriz[i -1 ][j +2 ].getNombre().equals("Casilla")||matriz[i -1 ][j +2 ].isColor() != caballo.isColor()){
+                posibles.add(String.valueOf(i-1) + String.valueOf(j+2));
+
+            }
+        }catch (IndexOutOfBoundsException e) {
+
+        }
+        caballo.setCont(caballo.getCont()+1);
+
+    return posibles;
+    }
+
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         return false;

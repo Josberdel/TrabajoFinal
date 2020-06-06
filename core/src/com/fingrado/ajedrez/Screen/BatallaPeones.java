@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class BatallaPeones implements Screen, InputProcessor {
     private BitmapFont font = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
     private BitmapFont font2 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
+    private BitmapFont font3 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
     SpriteBatch batch;
     int i = 0;
     int j = 0;
@@ -67,12 +68,12 @@ public class BatallaPeones implements Screen, InputProcessor {
         batch.begin();
         for(int i=0;i<8;i++){
             if(matriz[i][0].getNombre()=="PeonN"){
-                font2.draw(batch,"ganan las negras  r para reiniciar o Esc para salir",Gdx.graphics.getWidth()-120,120);
+                font2.draw(batch,"ganan las negras ",Gdx.graphics.getWidth()-100,120);
             }
         }
         for(i=0;i<8;i++){
             if(matriz[i][7].getNombre()=="PeonB"){
-                font2.draw(batch,"ganan las blancas r para reiniciar o Esc para salir",Gdx.graphics.getWidth()-120,120);
+                font2.draw(batch,"ganan las blancas",Gdx.graphics.getWidth()-100,120);
             }
         }
         batch.end();
@@ -132,9 +133,10 @@ public class BatallaPeones implements Screen, InputProcessor {
             }
         }
         if(turno==true)
-            font.draw(batch,"turno de las blancas",Gdx.graphics.getWidth()-120,60);
+            font.draw(batch,"turno de las blancas",Gdx.graphics.getWidth()-100,60);
         else
-            font.draw(batch,"turno de las negras",Gdx.graphics.getWidth()-120,60);
+            font.draw(batch,"turno de las negras",Gdx.graphics.getWidth()-100,60);
+        font3.draw(batch," r para reiniciar o Esc para salir",Gdx.graphics.getWidth()-165,180);
         batch.end();
 
     }
