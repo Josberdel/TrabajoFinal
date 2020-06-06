@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.fingrado.ajedrez.Screen.GameScreen;
+import com.fingrado.ajedrez.Screen.PantallaMenuPrincipal;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void create () {
-		((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen() );
+		((Game)Gdx.app.getApplicationListener()).setScreen(new PantallaMenuPrincipal());
 	}
 	@Override
 	public void render () {

@@ -1,9 +1,6 @@
 package com.fingrado.ajedrez.Screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -160,7 +157,10 @@ public class GameScreen implements Screen, InputProcessor {
     private void comprobarTeclado() {
         if (Gdx.input.isKeyPressed(Input.Keys.R))
             cargarTableroInicial();
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new PantallaMenuPrincipal());
     }
+
 
     private void pintar() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
