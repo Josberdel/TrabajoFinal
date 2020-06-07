@@ -343,7 +343,6 @@ public class GameScreen implements Screen, InputProcessor {
                                 case "PeonB":
                                     moverPeonB(cont, i, j);
                                     break;
-
                             }
                             break;
                         } else
