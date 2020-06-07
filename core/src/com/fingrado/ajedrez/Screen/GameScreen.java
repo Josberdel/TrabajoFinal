@@ -19,6 +19,9 @@ import java.util.Set;
 
 public class GameScreen implements Screen, InputProcessor {
     private BitmapFont font = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
+    private BitmapFont font2 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
+    private BitmapFont font3 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
+    private BitmapFont font4 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
     SpriteBatch batch;
     int i = 0;
     int j = 0;
@@ -277,6 +280,7 @@ public class GameScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        font4.draw(batch,"para ganar lleva uno de tus peones al otro lado del tablero ",500,240);
         batch.draw(texturaTablero, 0, 0);
         for (i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
@@ -284,12 +288,16 @@ public class GameScreen implements Screen, InputProcessor {
             }
 
         }
-
+        font3.draw(batch," r para reiniciar o Esc para salir",500,180);
+        if(cont==null){
+            font2.draw(batch, "No has seleccionado ninguna pieza", 500, 120);
+        }else
+            font2.draw(batch, "Las posiciones a la que puede ir el " + cont.getNombre() + " son " + posibles, 500, 120);
         font.setColor(Color.RED);
         if(turno==true)
-            font.draw(batch,"turno de las blancas",Gdx.graphics.getWidth()-140,60);
+            font.draw(batch,"turno de las blancas",700,60);
         else
-            font.draw(batch,"turno de las negras",Gdx.graphics.getWidth()-140,60);
+            font.draw(batch,"turno de las negras",700,60);
         batch.end();
     }
 
@@ -342,87 +350,80 @@ public class GameScreen implements Screen, InputProcessor {
                             System.out.println("turno rival");
                     } else {
                         try {
-                            if (posibles.contains(String.valueOf(i) + String.valueOf(j))) {
-                                cont.setPosicion(new Vector2(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y));
-                                System.out.println(matriz[i][j].getPosicion()+" "+i+" "+j);
-                                matriz[i][j] = cont;
-                                System.out.println(i +" "+ j + matriz[i][j].getNombre());
-                                matriz[i][j].rect= new Rectangle(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y,  matriz[i][j].getTexture().getWidth(), matriz[i][j].getTexture().getWidth());
-                                System.out.println(i +" "+ j + matriz[i][j].rect);
-                                if(cont.getNombre()=="Rey"&&Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))+2==i){
-                                    System.out.println(matriz[i][j].getNombre()+" "+matriz[i][j].getPosicion()+" "+matriz[i][j].rect+" "+matriz[i][j].getTexture());
-                                    if ((7 + j) % 2 != 0) {
-                                        System.out.println(matriz[i][j].getPosicion().x+" "+matriz[i][j].getPosicion().y);
-                                        matriz[7][j] = new Casilla("Casilla", true, new Vector2(7*60, j * 60), texturaCasillaBlanca);
-                                        matriz[i-1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x - 60, j*60),torreBlanca);
-                                    }
-                                    else {
-                                        System.out.println(matriz[i][j].getPosicion().x+" "+matriz[i][j].getPosicion().y);
-                                        matriz[7][j] = new Casilla("Casilla", false, new Vector2(7*60, j * 60), texturaCasillaNegra);
-                                        matriz[i-1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x -60, j*60),torreNegra);
-                                    }
-                                }
-                                else{
-                                    if(cont.getNombre()=="Rey"&&Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))-2==i){
-                                        if ((0 + j) % 2 == 0) {
-                                            matriz[0][j] = new Casilla("Casilla", false, new Vector2(i*60, j * 60), texturaCasillaNegra);
-                                            matriz[i+1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x + 60, j*60),torreBlanca );
+                                if (posibles.contains(String.valueOf(i) + String.valueOf(j))) {
+                                    cont.setPosicion(new Vector2(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y));
+                                    System.out.println(matriz[i][j].getPosicion() + " " + i + " " + j);
+                                    matriz[i][j] = cont;
+                                    System.out.println(i + " " + j + matriz[i][j].getNombre());
+                                    matriz[i][j].rect = new Rectangle(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y, matriz[i][j].getTexture().getWidth(), matriz[i][j].getTexture().getWidth());
+                                    System.out.println(i + " " + j + matriz[i][j].rect);
+                                    if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) + 2 == i) {
+                                        System.out.println(matriz[i][j].getNombre() + " " + matriz[i][j].getPosicion() + " " + matriz[i][j].rect + " " + matriz[i][j].getTexture());
+                                        if ((7 + j) % 2 != 0) {
+                                            System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
+                                            matriz[7][j] = new Casilla("Casilla", true, new Vector2(7 * 60, j * 60), texturaCasillaBlanca);
+                                            matriz[i - 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x - 60, j * 60), torreBlanca);
+                                        } else {
+                                            System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
+                                            matriz[7][j] = new Casilla("Casilla", false, new Vector2(7 * 60, j * 60), texturaCasillaNegra);
+                                            matriz[i - 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x - 60, j * 60), torreNegra);
                                         }
-                                        else {
-                                            matriz[0][j] = new Casilla("Casilla", true, new Vector2(i*60, j * 60), texturaCasillaBlanca);
-                                            matriz[i+1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x + 60, j*60),torreNegra);
+                                    } else {
+                                        if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) - 2 == i) {
+                                            if ((0 + j) % 2 == 0) {
+                                                matriz[0][j] = new Casilla("Casilla", false, new Vector2(i * 60, j * 60), texturaCasillaNegra);
+                                                matriz[i + 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x + 60, j * 60), torreBlanca);
+                                            } else {
+                                                matriz[0][j] = new Casilla("Casilla", true, new Vector2(i * 60, j * 60), texturaCasillaBlanca);
+                                                matriz[i + 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x + 60, j * 60), torreNegra);
+                                            }
                                         }
                                     }
-                                }
 
-                                if(turno==true) {
-                                    System.out.println(posReyBlanco);
-                                    System.out.println(comprobarJaqueBlanco());
-                                    if (comprobarJaqueBlanco().contains(posReyBlanco)) {
-                                        cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))]
-                                                [Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))].getPosicion().x,
-                                                matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))]
-                                                        [Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))].getPosicion().y));
-                                        cont.setCont(cont.getCont()-1);
-                                        matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))]=cont;
+                                    if (turno == true) {
+                                        System.out.println(posReyBlanco);
+                                        System.out.println(comprobarJaqueBlanco());
+                                        if (comprobarJaqueBlanco().contains(posReyBlanco)) {
+                                            cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
+                                                    [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().x,
+                                                    matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
+                                                            [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().y));
+                                            cont.setCont(cont.getCont() - 1);
+                                            matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))] = cont;
+                                            turno = !turno;
+                                            System.out.println("No puedes mover el rey blanco estaria en jaque");
+                                        }
+                                    } else {
+                                        System.out.println(posReyNegro);
+                                        System.out.println(comprobarJaqueNegro());
+                                        if (comprobarJaqueNegro().contains(posReyNegro)) {
+                                            cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
+                                                    [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().x,
+                                                    matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
+                                                            [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().y));
+
+                                            matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))] = cont;
+                                            System.out.println("No puedes mover el rey negro estaria en jaque");
+                                            turno = !turno;
+
+                                        }
+                                    }
+                                    if (posibles.get(posibles.size() - 1).equals((String.valueOf(i) + String.valueOf(j)))) {
+                                        if (cont.getCont() > 0) {
+                                            cont.setCont(cont.getCont() - 1);
+                                        }
+                                    } else {
                                         turno = !turno;
-                                    System.out.println("No puedes mover el rey blanco estaria en jaque");
                                     }
-                                }
-                                else{
-                                    System.out.println(posReyNegro);
-                                    System.out.println(comprobarJaqueNegro());
-                                    if(comprobarJaqueNegro().contains(posReyNegro)){
-                                        cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))]
-                                                [Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))].getPosicion().x,
-                                                matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))]
-                                                        [Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))].getPosicion().y));
+                                    cont = null;
+                                    posibles.clear();
+                                } else {
 
-                                        matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size()-1).charAt(1)))]=cont;
-                                        System.out.println("No puedes mover el rey negro estaria en jaque");
-                                        turno = !turno;
+                                    font2.draw(batch, "Movimiento invalido las posiciones a la que puede ir el " + cont.getNombre() + " son " + posibles, 700, 120);
 
-                                    }
                                 }
-                                if (posibles.get(posibles.size() - 1).equals((String.valueOf(i) + String.valueOf(j)))){
-                                    if(cont.getCont()>0){
-                                    cont.setCont(cont.getCont() - 1);
-                                    }
-                                }
-                                else{
-                                    turno = !turno;
-                                }
-                                cont = null;
-                                posibles.clear();
-                            } else {
-                                System.out.println("movimiento invalido ");
-                                System.out.println(matriz[i][j].rect);
 
-                            }
-                        } catch (NullPointerException e) {
-                            System.out.println("No tienes ninguna pieza seleccionada");
-
-                        }catch (Exception e){
+                        } catch (Exception e){
                             System.out.println(e);
                         }
                     }
@@ -433,6 +434,9 @@ public class GameScreen implements Screen, InputProcessor {
         }
         return false;
     }
+
+
+
     public void  moverPeonB(Pieza peon, int i,int j){
         if(matriz[i][j+1].getNombre().equals("Casilla")) {
             posibles.add(i + String.valueOf(j + 1));

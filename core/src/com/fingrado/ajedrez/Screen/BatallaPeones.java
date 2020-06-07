@@ -2,6 +2,7 @@ package com.fingrado.ajedrez.Screen;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -132,11 +133,16 @@ public class BatallaPeones implements Screen, InputProcessor {
                 matriz[i][j].pintar(batch);
             }
         }
+        font3.draw(batch," r para reiniciar o Esc para salir",500,180);
+        if(cont==null){
+            font2.draw(batch, "No has seleccionado ninguna pieza", 500, 120);
+        }else
+            font2.draw(batch, "Las posiciones a la que puede ir el " + cont.getNombre() + " son " + posibles, 500, 120);
+        font.setColor(Color.RED);
         if(turno==true)
-            font.draw(batch,"turno de las blancas",Gdx.graphics.getWidth()-150,60);
+            font.draw(batch,"turno de las blancas",500,60);
         else
-            font.draw(batch,"turno de las negras",Gdx.graphics.getWidth()-150,60);
-        font3.draw(batch," r para reiniciar o Esc para salir",Gdx.graphics.getWidth()-165,180);
+            font.draw(batch,"turno de las negras",500,60);
         batch.end();
 
     }
