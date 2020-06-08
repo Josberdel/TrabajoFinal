@@ -1,5 +1,4 @@
 package com.fingrado.ajedrez.Screen;
-
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -9,14 +8,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
 import com.fingrado.ajedrez.*;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 public class GameScreen implements Screen, InputProcessor {
     private BitmapFont font = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
     private BitmapFont font2 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
@@ -31,8 +27,8 @@ public class GameScreen implements Screen, InputProcessor {
     boolean turno=true;
     int Contador_tablas;
     int ayuda = 0;
-    private ArrayList<String> posiblesMovBlancas;
-    private ArrayList<String> posiblesMovNegras;
+    private ArrayList<String> amenazasBlancas;
+    private ArrayList<String> amenazasNegras;
     private ArrayList<String> posibles;
     Pieza matriz[][] = new Pieza[8][8];
     Texture tablero[][] = new Texture[8][8];
@@ -52,18 +48,16 @@ public class GameScreen implements Screen, InputProcessor {
     private Texture damaNegra = new Texture("piezasStauton/damaNegra.PNG");
     private Texture reyBlanco = new Texture("piezasStauton/reyBlanco.PNG");
     private Texture reyNegro = new Texture("piezasStauton/reyNegro.PNG");
-
     @Override
     public void show() {
         batch = new SpriteBatch();
         piezas = new ArrayList<>();
         posibles= new ArrayList<>();
-        posiblesMovBlancas = new ArrayList<>();
-        posiblesMovNegras= new ArrayList<>();
+        amenazasBlancas = new ArrayList<>();
+        amenazasNegras = new ArrayList<>();
         cargarTableroInicial();
         Gdx.input.setInputProcessor(this);
     }
-
     private void cargarTableroInicial() {
         turno=true;
         int x = 0;
@@ -73,7 +67,6 @@ public class GameScreen implements Screen, InputProcessor {
         FileHandle file = Gdx.files.internal("Posiciones/tablero.txt");
         String levelInfo = file.readString();
         Pieza pieza = null;
-
         // for (String fila : filas){
         String[] casillas = levelInfo.split(",");
         for (String casilla : casillas) {
@@ -121,10 +114,8 @@ public class GameScreen implements Screen, InputProcessor {
                 case "N":
                     pieza = new Casilla("Casilla" , true, new Vector2(x, y), texturaCasillaNegra);
                     break;
-                }
-
+            }
             matriz[i][j] = pieza;
-
             i += 1;
             x += 60;
             // }
@@ -136,101 +127,26 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
     }
-
     @Override
     public void render(float delta) {
         pintar();
         actualizar();
-
     }
-
     private void actualizar() {
         comprobarTeclado();
         comprobarCoronar();
         buscaPosReyBlanco();
         buscaPosReyNegro();
-        comprobarJaqueMateReyBlanco();
-        comprobarJaqueMateReyNegro();
     }
-
-    private void comprobarJaqueMateReyNegro() {
-        posiblesMovNegras.clear();
-        for (i = 0; i < 8; i++) {
-            for (j = 7; j > -1; j--) {
-                if (matriz[i][j].isColor() != true) {
-                    j = 7 - j;
-                    if (turno == matriz[i][j].isColor()) {
-                        cont = matriz[i][j];
-                        switch (cont.getNombre()) {
-                            case "Rey":
-                                moverRey(cont, i, j);
-                                break;
-                            case "Dama":
-                                moverTorre(cont, i, j);
-                                moverAlfil(cont, i, j);
-                                break;
-                            case "Caballo":
-                                moverCaballo(cont, i, j);
-                                break;
-                            case "Alfil":
-                                moverAlfil(cont, i, j);
-                                break;
-                            case "Torre":
-                                moverTorre(cont, i, j);
-                                break;
-                            case "PeonB":
-                                moverPeonB(cont, i, j);
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    private void comprobarJaqueMateReyBlanco() {
-        for (i = 0; i < 8; i++) {
-            for (j = 7; j > -1; j--) {
-                if (matriz[i][j].isColor() == true) {
-                    j = 7 - j;
-                    if (turno == matriz[i][j].isColor()) {
-                        cont = matriz[i][j];
-                        switch (cont.getNombre()) {
-                            case "Rey":
-                                moverRey(cont, i, j);
-                                break;
-                            case "Dama":
-                                moverTorre(cont, i, j);
-                                moverAlfil(cont, i, j);
-                                break;
-                            case "Caballo":
-                                moverCaballo(cont, i, j);
-                                break;
-                            case "Alfil":
-                                moverAlfil(cont, i, j);
-                                break;
-                            case "Torre":
-                                moverTorre(cont, i, j);
-                                break;
-                            case "PeonB":
-                                moverPeonB(cont, i, j);
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    private String buscaPosReyBlanco() {
+    private void buscaPosReyBlanco() {
         for (i = 0; i < 8; i++) {
             for (j = 7; j > -1; j--) {
                 if(matriz[i][j].getNombre()=="Rey"&&matriz[i][j].isColor()==true){
-                   return String.valueOf(i)+String.valueOf(j);
+                    posReyBlanco = String.valueOf(i)+String.valueOf(j);
                 }
             }
         }
-        return null;
     }
-
     private void buscaPosReyNegro() {
         for (i = 0; i < 8; i++) {
             for (j = 7; j > -1; j--) {
@@ -247,29 +163,29 @@ public class GameScreen implements Screen, InputProcessor {
                 if(matriz[i][j].isColor()!=true) {
                     switch (matriz[i][j].getNombre()) {
                         case "Rey":
-                            System.out.println("ReyN"+atacarRey(matriz[i][j], i, j));
+                            //System.out.println("ReyN"+atacarRey(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarRey(matriz[i][j], i, j));
                             break;
                         case "Dama":
-                            System.out.println("DamaN"+atacarTorre(matriz[i][j], i, j));
-                            System.out.println("DamaN"+atacarAlfil(matriz[i][j], i, j));
+                            //System.out.println("DamaN"+atacarTorre(matriz[i][j], i, j));
+                            // System.out.println("DamaN"+atacarAlfil(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarTorre(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Caballo":
-                            System.out.println("CaballoN"+atacarCaballo(matriz[i][j], i, j));
+                            //System.out.println("CaballoN"+atacarCaballo(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarCaballo(matriz[i][j], i, j));
                             break;
                         case "Alfil":
-                            System.out.println("AlfilN"+atacarAlfil(matriz[i][j], i, j));
+                            // System.out.println("AlfilN"+atacarAlfil(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarAlfil(matriz[i][j],i,j));
                             break;
                         case "Torre":
-                            System.out.println("TorreN"+atacarTorre(matriz[i][j], i, j));
+                            // System.out.println("TorreN"+atacarTorre(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarTorre(matriz[i][j], i, j));
                             break;
                         case "PeonN":
-                            System.out.println("PeonN"+atacarPeonN(matriz[i][j], i, j));
+                            //System.out.println("PeonN"+atacarPeonN(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarPeonN(matriz[i][j], i, j) );
                             break;
                     }
@@ -289,29 +205,29 @@ public class GameScreen implements Screen, InputProcessor {
                 if(matriz[i][j].isColor()!=false) {
                     switch (matriz[i][j].getNombre()) {
                         case "Rey":
-                            System.out.println("ReyB"+atacarRey(matriz[i][j], i, j));
+                            //System.out.println("ReyB"+atacarRey(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarRey(matriz[i][j], i, j));
                             break;
                         case "Dama":
-                            System.out.println("DamaB"+atacarTorre(matriz[i][j], i, j));
-                            System.out.println("DamaB"+atacarAlfil(matriz[i][j], i, j));
+                            /*System.out.println("DamaB"+atacarTorre(matriz[i][j], i, j));
+                            System.out.println("DamaB"+atacarAlfil(matriz[i][j], i, j));*/
                             amenazasBlancas.addAll(atacarTorre(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Caballo":
-                            System.out.println("CaballoB"+atacarCaballo(matriz[i][j], i, j));
+                            //System.out.println("CaballoB"+atacarCaballo(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarCaballo(matriz[i][j], i, j));
                             break;
                         case "Alfil":
-                            System.out.println("AlfilB"+atacarAlfil(matriz[i][j], i, j));
+                            //System.out.println("AlfilB"+atacarAlfil(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Torre":
-                            System.out.println("TorreB"+atacarTorre(matriz[i][j], i, j));
+                            //System.out.println("TorreB"+atacarTorre(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarTorre(matriz[i][j], i, j));
                             break;
                         case "PeonB":
-                            System.out.println("PeonB"+atacarPeonB(matriz[i][j], i, j));
+                            //System.out.println("PeonB"+atacarPeonB(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarPeonB(matriz[i][j], i, j));
                             break;
                     }
@@ -324,7 +240,6 @@ public class GameScreen implements Screen, InputProcessor {
         Collections.sort(amenazasBlancas);
         return amenazasBlancas;
     }
-
     private void comprobarCoronar() {
         for(int i=0;i<8;i++){
             if(matriz[i][0].getNombre()=="PeonN"){
@@ -337,15 +252,12 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
     }
-
     private void comprobarTeclado() {
         if (Gdx.input.isKeyPressed(Input.Keys.R))
             cargarTableroInicial();
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
             ((Game)Gdx.app.getApplicationListener()).setScreen(new PantallaMenuPrincipal());
     }
-
-
     private void pintar() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -356,7 +268,6 @@ public class GameScreen implements Screen, InputProcessor {
             for (j = 0; j < 8; j++) {
                 matriz[i][j].pintar(batch);
             }
-
         }
         font3.draw(batch," r para reiniciar o Esc para salir",500,180);
         if(cont==null){
@@ -370,18 +281,14 @@ public class GameScreen implements Screen, InputProcessor {
             font.draw(batch,"turno de las negras",700,60);
         batch.end();
     }
-
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
         Rectangle rect = new Rectangle(screenX, screenY, 10, 10);
         for (i = 0; i < 8; i++) {
             for (j = 7; j > -1; j--) {
-
                 if (rect.overlaps(matriz[i][j].rect)) {
                     j=7-j;
                     if (cont == null && !matriz[i][j].getNombre().equals("Casilla")) {
-
                         if (turno == matriz[i][j].isColor()) {
                             cont = matriz[i][j];
                             if ((i + j) % 2 == 0){
@@ -413,99 +320,90 @@ public class GameScreen implements Screen, InputProcessor {
                                 case "PeonB":
                                     moverPeonB(cont, i, j);
                                     break;
+
                             }
                             break;
                         } else
                             System.out.println("turno rival");
                     } else {
                         try {
-                                if (posibles.contains(String.valueOf(i) + String.valueOf(j))) {
-                                    cont.setPosicion(new Vector2(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y));
-                                    System.out.println(matriz[i][j].getPosicion() + " " + i + " " + j);
-                                    matriz[i][j] = cont;
-                                    System.out.println(i + " " + j + matriz[i][j].getNombre());
-                                    matriz[i][j].rect = new Rectangle(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y, matriz[i][j].getTexture().getWidth(), matriz[i][j].getTexture().getWidth());
-                                    System.out.println(i + " " + j + matriz[i][j].rect);
-                                    if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) + 2 == i) {
-                                        System.out.println(matriz[i][j].getNombre() + " " + matriz[i][j].getPosicion() + " " + matriz[i][j].rect + " " + matriz[i][j].getTexture());
-                                        if ((7 + j) % 2 != 0) {
-                                            System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
-                                            matriz[7][j] = new Casilla("Casilla", true, new Vector2(7 * 60, j * 60), texturaCasillaBlanca);
-                                            matriz[i - 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x - 60, j * 60), torreBlanca);
+                            if (posibles.contains(String.valueOf(i) + String.valueOf(j))) {
+                                cont.setPosicion(new Vector2(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y));
+                                System.out.println(matriz[i][j].getPosicion() + " " + i + " " + j);
+                                matriz[i][j] = cont;
+                                System.out.println(i + " " + j + matriz[i][j].getNombre());
+                                matriz[i][j].rect = new Rectangle(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y, matriz[i][j].getTexture().getWidth(), matriz[i][j].getTexture().getWidth());
+                                System.out.println(i + " " + j + matriz[i][j].rect);
+                                if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) + 2 == i) {
+                                    System.out.println(matriz[i][j].getNombre() + " " + matriz[i][j].getPosicion() + " " + matriz[i][j].rect + " " + matriz[i][j].getTexture());
+                                    if ((7 + j) % 2 != 0) {
+                                        System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
+                                        matriz[7][j] = new Casilla("Casilla", true, new Vector2(7 * 60, j * 60), texturaCasillaBlanca);
+                                        matriz[i - 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x - 60, j * 60), torreBlanca);
+                                    } else {
+                                        System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
+                                        matriz[7][j] = new Casilla("Casilla", false, new Vector2(7 * 60, j * 60), texturaCasillaNegra);
+                                        matriz[i - 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x - 60, j * 60), torreNegra);
+                                    }
+                                } else {
+                                    if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) - 2 == i) {
+                                        if ((0 + j) % 2 == 0) {
+                                            matriz[0][j] = new Casilla("Casilla", false, new Vector2(i * 60, j * 60), texturaCasillaNegra);
+                                            matriz[i + 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x + 60, j * 60), torreBlanca);
                                         } else {
-                                            System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
-                                            matriz[7][j] = new Casilla("Casilla", false, new Vector2(7 * 60, j * 60), texturaCasillaNegra);
-                                            matriz[i - 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x - 60, j * 60), torreNegra);
-                                        }
-                                    } else {
-                                        if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) - 2 == i) {
-                                            if ((0 + j) % 2 == 0) {
-                                                matriz[0][j] = new Casilla("Casilla", false, new Vector2(i * 60, j * 60), texturaCasillaNegra);
-                                                matriz[i + 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x + 60, j * 60), torreBlanca);
-                                            } else {
-                                                matriz[0][j] = new Casilla("Casilla", true, new Vector2(i * 60, j * 60), texturaCasillaBlanca);
-                                                matriz[i + 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x + 60, j * 60), torreNegra);
-                                            }
+                                            matriz[0][j] = new Casilla("Casilla", true, new Vector2(i * 60, j * 60), texturaCasillaBlanca);
+                                            matriz[i + 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x + 60, j * 60), torreNegra);
                                         }
                                     }
-
-                                    if (turno == true) {
-                                        System.out.println(posReyBlanco);
-                                        System.out.println(comprobarJaqueBlanco());
-                                        if (comprobarJaqueBlanco().contains(buscaPosReyBlanco())) {
-                                            cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
-                                                    [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().x,
-                                                    matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
-                                                            [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().y));
-                                            cont.setCont(cont.getCont() - 1);
-                                            matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))] = cont;
-                                            turno = !turno;
-                                            System.out.println("No puedes mover el rey blanco estaria en jaque");
-                                        }
-                                    } else {
-                                        System.out.println(posReyNegro);
-                                        System.out.println(comprobarJaqueNegro());
-                                        if (comprobarJaqueNegro().contains(posReyNegro)) {
-                                            cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
-                                                    [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().x,
-                                                    matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
-                                                            [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().y));
-
-                                            matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))] = cont;
-                                            System.out.println("No puedes mover el rey negro estaria en jaque");
-                                            turno = !turno;
-
-                                        }
+                                }
+                                if (turno == true) {
+                                    System.out.println(posReyBlanco);
+                                    System.out.println(comprobarJaqueBlanco());
+                                    if (comprobarJaqueBlanco().contains(posReyBlanco)) {
+                                        cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
+                                                [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().x,
+                                                matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
+                                                        [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().y));
+                                        cont.setCont(cont.getCont() - 1);
+                                        matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))] = cont;
+                                        turno = !turno;
+                                        System.out.println("No puedes mover el rey blanco estaria en jaque");
                                     }
-                                    if (posibles.get(posibles.size() - 1).equals((String.valueOf(i) + String.valueOf(j)))) {
-                                        if (cont.getCont() > 0) {
-                                            cont.setCont(cont.getCont() - 1);
-                                        }
-                                    } else {
+                                } else {
+                                    System.out.println(posReyNegro);
+                                    System.out.println(comprobarJaqueNegro());
+                                    if (comprobarJaqueNegro().contains(posReyNegro)) {
+                                        cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
+                                                [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().x,
+                                                matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
+                                                        [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().y));
+                                        matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))][Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))] = cont;
+                                        System.out.println("No puedes mover el rey negro estaria en jaque");
                                         turno = !turno;
                                     }
-                                    cont = null;
-                                    posibles.clear();
-                                } else {
-
-                                    font2.draw(batch, "Movimiento invalido las posiciones a la que puede ir el " + cont.getNombre() + " son " + posibles, 700, 120);
-
                                 }
-
+                                if (posibles.get(posibles.size() - 1).equals((String.valueOf(i) + String.valueOf(j)))) {
+                                    if (cont.getCont() > 0) {
+                                        cont.setCont(cont.getCont() - 1);
+                                    }
+                                } else {
+                                    turno = !turno;
+                                }
+                                cont = null;
+                                posibles.clear();
+                            } else {
+                                font2.draw(batch, "Movimiento invalido las posiciones a la que puede ir el " + cont.getNombre() + " son " + posibles, 700, 120);
+                            }
                         } catch (Exception e){
                             System.out.println(e);
                         }
                     }
                     break;
                 }
-
             }
         }
         return false;
     }
-
-
-
     public void  moverPeonB(Pieza peon, int i,int j){
         if(matriz[i][j+1].getNombre().equals("Casilla")) {
             posibles.add(i + String.valueOf(j + 1));
@@ -518,19 +416,16 @@ public class GameScreen implements Screen, InputProcessor {
                 posibles.add(String.valueOf(i+1)+String.valueOf(j+1));
             }
         }catch (IndexOutOfBoundsException e){
-
         }
         try{
             if(matriz[i-1][j+1].isColor()!=peon.isColor()&&!matriz[i-1][j+1].getNombre().equals("Casilla")){
                 posibles.add(String.valueOf(i-1)+String.valueOf(j+1));
             }
         }catch (IndexOutOfBoundsException e){
-
         }
         posibles.add(String.valueOf(i)+String.valueOf(j));
         peon.setCont(peon.getCont()+1);
     }
-
     public void moverPeonN(Pieza peon, int i,int j){
         if(matriz[i][j-1].getNombre().equals("Casilla")) {
             posibles.add(i + String.valueOf(j - 1));
@@ -543,14 +438,12 @@ public class GameScreen implements Screen, InputProcessor {
                 posibles.add(String.valueOf(i+1)+String.valueOf(j-1));
             }
         }catch (IndexOutOfBoundsException e){
-
         }
         try {
             if (matriz[i - 1][j - 1].isColor() != peon.isColor() && !matriz[i - 1][j - 1].getNombre().equals("Casilla")) {
                 posibles.add(String.valueOf(i - 1) + String.valueOf(j - 1));
             }
         }catch(IndexOutOfBoundsException e){
-
         }
         posibles.add(String.valueOf(i)+String.valueOf(j));
         peon.setCont(peon.getCont()+1);
@@ -608,31 +501,22 @@ public class GameScreen implements Screen, InputProcessor {
         }
         posibles.add(String.valueOf(i)+String.valueOf(j));
         torre.setCont(torre.getCont()+1);
-
     }
     public void  moverRey(Pieza Rey ,int  i,int  j){
         int c=0;
         for(int a=-1;a<2;a++){
             for (int b=-1;b<2;b++){
                 try{
-                    if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor()){
-                        System.out.println(String.valueOf(i+a) + String.valueOf(j+b)+comprobarJaqueNegro());
-                        System.out.println(matriz[i+a][j+b].getNombre()+matriz[i+a][j+b].isColor());
-                        if(!comprobarJaqueBlanco().contains(String.valueOf(i+a) + String.valueOf(j+b)))
-                            posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
-                        System.out.println(matriz[i+a][j+b].getNombre()+matriz[i+a][j+b].isColor());
-                    }
+                    if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor())
+                        posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
                 }catch (IndexOutOfBoundsException e){
                 }
             }
             if(Rey.getCont()==0){
-
                 if(matriz[0][j].getCont()==0){
                     for(c=1;c<4;c++){
-
                         if(matriz[c][j].getNombre()!="Casilla"){
-
-                           break;
+                            break;
                         }
                     }
                     if(c>3){
@@ -644,9 +528,7 @@ public class GameScreen implements Screen, InputProcessor {
                 }
                 if(matriz[7][j].getCont()==0){
                     for(c=5;c<7;c++){
-
                         if(matriz[c][j].getNombre()!="Casilla"){
-
                             break;
                         }
                     }
@@ -661,7 +543,7 @@ public class GameScreen implements Screen, InputProcessor {
             else
                 System.out.println("El rey  se ha movido no puede realizar ningun enroque");
         }
-
+        posibles.add(String.valueOf(i) + String.valueOf(j));
         Rey.setCont(Rey.getCont()+1);
     }
     public void  moverAlfil(Pieza alfil,int i ,int j) {
@@ -701,7 +583,6 @@ public class GameScreen implements Screen, InputProcessor {
                     break;
                 }
             } catch (IndexOutOfBoundsException e) {
-
             }
         }
         for (int a = 1; a < 8; a++) {
@@ -721,29 +602,23 @@ public class GameScreen implements Screen, InputProcessor {
         posibles.add(String.valueOf(i) + String.valueOf(j));
     }
     public void  moverCaballo(Pieza caballo, int  i,int  j){
-
         try{
             if (matriz[i +1 ][j +2 ].getNombre().equals("Casilla")||matriz[i +1 ][j +2 ].isColor() != caballo.isColor()){
                 posibles.add(String.valueOf(i +1) + String.valueOf(j +2));
-
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (matriz[i +2][j +1 ].getNombre().equals("Casilla")||matriz[i +2 ][j +1 ].isColor() != caballo.isColor()){
                 posibles.add(String.valueOf(i+2) + String.valueOf(j+1));
-
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (matriz[i+2 ][j -1 ].getNombre().equals("Casilla")||matriz[i +2 ][j -1 ].isColor() != caballo.isColor()){
                 posibles.add(String.valueOf(i + 2) + String.valueOf(j -1 ));
-        }
+            }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (matriz[i +1 ][j -2 ].getNombre().equals("Casilla")||matriz[i +1 ][j -2 ].isColor() != caballo.isColor()) {
@@ -756,75 +631,57 @@ public class GameScreen implements Screen, InputProcessor {
                 posibles.add(String.valueOf(i -1) + String.valueOf(j -2));
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (matriz[i -2][j -1].getNombre().equals("Casilla")||matriz[i -2 ][j -1 ].isColor() != caballo.isColor()){
                 posibles.add(String.valueOf(i-2) + String.valueOf(j-1));
-        }
+            }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (matriz[i -2 ][j +1 ].getNombre().equals("Casilla")||matriz[i -2 ][j +1 ].isColor() != caballo.isColor()){
                 posibles.add(String.valueOf(i -2) + String.valueOf(j +1 ));
-
-        }
+            }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (matriz[i -1 ][j +2 ].getNombre().equals("Casilla")||matriz[i -1 ][j +2 ].isColor() != caballo.isColor()){
                 posibles.add(String.valueOf(i-1) + String.valueOf(j+2));
-
-        }
+            }
         }catch (IndexOutOfBoundsException e) {
-
         }
         caballo.setCont(caballo.getCont()+1);
         posibles.add(String.valueOf(i) + String.valueOf(j));
     }
-
     public ArrayList<String> atacarPeonB(Pieza peon, int i, int j){
         ArrayList<String> posibles=new ArrayList<>();
         try{
             if(matriz[i+1][j+1].getNombre().equals("Casilla")){
                 posibles.add(String.valueOf(i+1)+String.valueOf(j+1));
             }
-
         }catch (IndexOutOfBoundsException e){
-
         }
         try{
             if(matriz[i-1][j+1].getNombre().equals("Casilla")){
                 posibles.add(String.valueOf(i-1)+String.valueOf(j+1));
             }
-
         }catch (IndexOutOfBoundsException e){
-
         }
-
-
         return posibles;
     }
-
     public ArrayList<String> atacarPeonN(Pieza peon, int i, int j){
         ArrayList<String> posibles=new ArrayList<>();
         try{
             if(matriz[i+1][j-1].getNombre().equals("Casilla")){
                 posibles.add(String.valueOf(i+1)+String.valueOf(j-1));
             }
-
         }catch (IndexOutOfBoundsException e){
-
         }
         try {
             if (matriz[i - 1][j - 1].getNombre().equals("Casilla")) {
                 posibles.add(String.valueOf(i - 1) + String.valueOf(j - 1));
             }
-
         }catch(IndexOutOfBoundsException e){
-
         }
         return posibles;
     }
@@ -927,7 +784,6 @@ public class GameScreen implements Screen, InputProcessor {
                     break;
                 }
             } catch (IndexOutOfBoundsException e) {
-
             }
         }
         for (int a = 1; a < 8; a++) {
@@ -951,22 +807,18 @@ public class GameScreen implements Screen, InputProcessor {
                 posibles.add(String.valueOf(i +1) + String.valueOf(j +2));
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (!matriz[i +2][j +1 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i+2) + String.valueOf(j+1));
-
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (!matriz[i+2 ][j -1 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i + 2) + String.valueOf(j - 1 ));
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (!matriz[i +1 ][j -2 ].getNombre().equals("f")) {
@@ -979,91 +831,69 @@ public class GameScreen implements Screen, InputProcessor {
                 posibles.add(String.valueOf(i -1) + String.valueOf(j -2));
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (!matriz[i -2][j -1].getNombre().equals("f")){
                 posibles.add(String.valueOf(i-2) + String.valueOf(j-1));
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (!matriz[i -2 ][j +1 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i -2) + String.valueOf(j +1 ));
-
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
         try{
             if (!matriz[i -1 ][j +2 ].getNombre().equals("f")){
                 posibles.add(String.valueOf(i-1) + String.valueOf(j+2));
-
             }
         }catch (IndexOutOfBoundsException e) {
-
         }
-    return posibles;
+        return posibles;
     }
-
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         return false;
     }
-
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
     }
-
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
-
     @Override
     public void dispose() {
         batch.dispose();
     }
-
     @Override
     public boolean keyDown(int keycode) {
         return false;
     }
-
     @Override
     public boolean keyUp(int keycode) {
         return false;
     }
-
     @Override
     public boolean keyTyped(char character) {
         return false;
     }
-
     @Override
     public boolean scrolled(int amount) {
         return false;
     }
-
     @Override
     public void resize(int width, int height) {
     }
-
     @Override
     public void pause() {
-
     }
-
     @Override
     public void resume() {
-
     }
-
     @Override
     public void hide() {
     }
 }
-
-
