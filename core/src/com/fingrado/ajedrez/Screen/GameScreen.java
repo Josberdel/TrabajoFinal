@@ -505,8 +505,14 @@ public class GameScreen implements Screen, InputProcessor {
             for (int b=-1;b<2;b++){
                 try{
                     if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor())
-                        if(!comprobarJaqueBlanco().contains(String.valueOf(i+a) + String.valueOf(j+b)))
-                            posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
+                        if(Rey.isColor()==true){
+                            if(!comprobarJaqueBlanco().contains(String.valueOf(i+a) + String.valueOf(j+b)))
+                                posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
+                        }
+                        else{
+                            if(!comprobarJaqueNegro().contains(String.valueOf(i+a) + String.valueOf(j+b)))
+                                posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
+                        }
                 }catch (IndexOutOfBoundsException e){
                 }
             }
