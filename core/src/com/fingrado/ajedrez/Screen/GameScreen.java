@@ -31,8 +31,8 @@ public class GameScreen implements Screen, InputProcessor {
     boolean turno=true;
     int Contador_tablas;
     int ayuda = 0;
-    private ArrayList<String> amenazasBlancas;
-    private ArrayList<String> amenazasNegras;
+    private ArrayList<String> posiblesMovBlancas;
+    private ArrayList<String> posiblesMovNegras;
     private ArrayList<String> posibles;
     Pieza matriz[][] = new Pieza[8][8];
     Texture tablero[][] = new Texture[8][8];
@@ -58,8 +58,8 @@ public class GameScreen implements Screen, InputProcessor {
         batch = new SpriteBatch();
         piezas = new ArrayList<>();
         posibles= new ArrayList<>();
-        amenazasBlancas = new ArrayList<>();
-        amenazasNegras = new ArrayList<>();
+        posiblesMovBlancas = new ArrayList<>();
+        posiblesMovNegras= new ArrayList<>();
         cargarTableroInicial();
         Gdx.input.setInputProcessor(this);
     }
@@ -149,16 +149,86 @@ public class GameScreen implements Screen, InputProcessor {
         comprobarCoronar();
         buscaPosReyBlanco();
         buscaPosReyNegro();
+        comprobarJaqueMateReyBlanco();
+        comprobarJaqueMateReyNegro();
     }
 
-    private void buscaPosReyBlanco() {
+    private void comprobarJaqueMateReyNegro() {
+        posiblesMovNegras.clear();
         for (i = 0; i < 8; i++) {
             for (j = 7; j > -1; j--) {
-                if(matriz[i][j].getNombre()=="Rey"&&matriz[i][j].isColor()==true){
-                   posReyBlanco = String.valueOf(i)+String.valueOf(j);
+                if (matriz[i][j].isColor() != true) {
+                    j = 7 - j;
+                    if (turno == matriz[i][j].isColor()) {
+                        cont = matriz[i][j];
+                        switch (cont.getNombre()) {
+                            case "Rey":
+                                moverRey(cont, i, j);
+                                break;
+                            case "Dama":
+                                moverTorre(cont, i, j);
+                                moverAlfil(cont, i, j);
+                                break;
+                            case "Caballo":
+                                moverCaballo(cont, i, j);
+                                break;
+                            case "Alfil":
+                                moverAlfil(cont, i, j);
+                                break;
+                            case "Torre":
+                                moverTorre(cont, i, j);
+                                break;
+                            case "PeonB":
+                                moverPeonB(cont, i, j);
+                                break;
+                        }
+                    }
                 }
             }
         }
+    }
+    private void comprobarJaqueMateReyBlanco() {
+        for (i = 0; i < 8; i++) {
+            for (j = 7; j > -1; j--) {
+                if (matriz[i][j].isColor() == true) {
+                    j = 7 - j;
+                    if (turno == matriz[i][j].isColor()) {
+                        cont = matriz[i][j];
+                        switch (cont.getNombre()) {
+                            case "Rey":
+                                moverRey(cont, i, j);
+                                break;
+                            case "Dama":
+                                moverTorre(cont, i, j);
+                                moverAlfil(cont, i, j);
+                                break;
+                            case "Caballo":
+                                moverCaballo(cont, i, j);
+                                break;
+                            case "Alfil":
+                                moverAlfil(cont, i, j);
+                                break;
+                            case "Torre":
+                                moverTorre(cont, i, j);
+                                break;
+                            case "PeonB":
+                                moverPeonB(cont, i, j);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    private String buscaPosReyBlanco() {
+        for (i = 0; i < 8; i++) {
+            for (j = 7; j > -1; j--) {
+                if(matriz[i][j].getNombre()=="Rey"&&matriz[i][j].isColor()==true){
+                   return String.valueOf(i)+String.valueOf(j);
+                }
+            }
+        }
+        return null;
     }
 
     private void buscaPosReyNegro() {
@@ -177,29 +247,29 @@ public class GameScreen implements Screen, InputProcessor {
                 if(matriz[i][j].isColor()!=true) {
                     switch (matriz[i][j].getNombre()) {
                         case "Rey":
-                            //System.out.println("ReyN"+atacarRey(matriz[i][j], i, j));
+                            System.out.println("ReyN"+atacarRey(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarRey(matriz[i][j], i, j));
                             break;
                         case "Dama":
-                           //System.out.println("DamaN"+atacarTorre(matriz[i][j], i, j));
-                           // System.out.println("DamaN"+atacarAlfil(matriz[i][j], i, j));
+                            System.out.println("DamaN"+atacarTorre(matriz[i][j], i, j));
+                            System.out.println("DamaN"+atacarAlfil(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarTorre(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Caballo":
-                            //System.out.println("CaballoN"+atacarCaballo(matriz[i][j], i, j));
+                            System.out.println("CaballoN"+atacarCaballo(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarCaballo(matriz[i][j], i, j));
                             break;
                         case "Alfil":
-                           // System.out.println("AlfilN"+atacarAlfil(matriz[i][j], i, j));
+                            System.out.println("AlfilN"+atacarAlfil(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarAlfil(matriz[i][j],i,j));
                             break;
                         case "Torre":
-                           // System.out.println("TorreN"+atacarTorre(matriz[i][j], i, j));
+                            System.out.println("TorreN"+atacarTorre(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarTorre(matriz[i][j], i, j));
                             break;
                         case "PeonN":
-                            //System.out.println("PeonN"+atacarPeonN(matriz[i][j], i, j));
+                            System.out.println("PeonN"+atacarPeonN(matriz[i][j], i, j));
                             amenazasNegras.addAll(atacarPeonN(matriz[i][j], i, j) );
                             break;
                     }
@@ -219,29 +289,29 @@ public class GameScreen implements Screen, InputProcessor {
                 if(matriz[i][j].isColor()!=false) {
                     switch (matriz[i][j].getNombre()) {
                         case "Rey":
-                            //System.out.println("ReyB"+atacarRey(matriz[i][j], i, j));
+                            System.out.println("ReyB"+atacarRey(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarRey(matriz[i][j], i, j));
                             break;
                         case "Dama":
-                            /*System.out.println("DamaB"+atacarTorre(matriz[i][j], i, j));
-                            System.out.println("DamaB"+atacarAlfil(matriz[i][j], i, j));*/
+                            System.out.println("DamaB"+atacarTorre(matriz[i][j], i, j));
+                            System.out.println("DamaB"+atacarAlfil(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarTorre(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Caballo":
-                            //System.out.println("CaballoB"+atacarCaballo(matriz[i][j], i, j));
+                            System.out.println("CaballoB"+atacarCaballo(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarCaballo(matriz[i][j], i, j));
                             break;
                         case "Alfil":
-                            //System.out.println("AlfilB"+atacarAlfil(matriz[i][j], i, j));
+                            System.out.println("AlfilB"+atacarAlfil(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarAlfil(matriz[i][j], i, j));
                             break;
                         case "Torre":
-                            //System.out.println("TorreB"+atacarTorre(matriz[i][j], i, j));
+                            System.out.println("TorreB"+atacarTorre(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarTorre(matriz[i][j], i, j));
                             break;
                         case "PeonB":
-                            //System.out.println("PeonB"+atacarPeonB(matriz[i][j], i, j));
+                            System.out.println("PeonB"+atacarPeonB(matriz[i][j], i, j));
                             amenazasBlancas.addAll(atacarPeonB(matriz[i][j], i, j));
                             break;
                     }
@@ -361,11 +431,11 @@ public class GameScreen implements Screen, InputProcessor {
                                         if ((7 + j) % 2 != 0) {
                                             System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
                                             matriz[7][j] = new Casilla("Casilla", true, new Vector2(7 * 60, j * 60), texturaCasillaBlanca);
-                                            matriz[i - 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x - 60, j * 60), torreBlanca);
+                                            matriz[i - 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x - 60, j * 60), torreBlanca);
                                         } else {
                                             System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
                                             matriz[7][j] = new Casilla("Casilla", false, new Vector2(7 * 60, j * 60), texturaCasillaNegra);
-                                            matriz[i - 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x - 60, j * 60), torreNegra);
+                                            matriz[i - 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x - 60, j * 60), torreNegra);
                                         }
                                     } else {
                                         if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) - 2 == i) {
@@ -382,7 +452,7 @@ public class GameScreen implements Screen, InputProcessor {
                                     if (turno == true) {
                                         System.out.println(posReyBlanco);
                                         System.out.println(comprobarJaqueBlanco());
-                                        if (comprobarJaqueBlanco().contains(posReyBlanco)) {
+                                        if (comprobarJaqueBlanco().contains(buscaPosReyBlanco())) {
                                             cont.setPosicion(new Vector2(matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
                                                     [Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(1)))].getPosicion().x,
                                                     matriz[Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0)))]
@@ -545,8 +615,13 @@ public class GameScreen implements Screen, InputProcessor {
         for(int a=-1;a<2;a++){
             for (int b=-1;b<2;b++){
                 try{
-                    if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor())
-                        posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
+                    if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor()){
+                        System.out.println(String.valueOf(i+a) + String.valueOf(j+b)+comprobarJaqueNegro());
+                        System.out.println(matriz[i+a][j+b].getNombre()+matriz[i+a][j+b].isColor());
+                        if(!comprobarJaqueBlanco().contains(String.valueOf(i+a) + String.valueOf(j+b)))
+                            posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
+                        System.out.println(matriz[i+a][j+b].getNombre()+matriz[i+a][j+b].isColor());
+                    }
                 }catch (IndexOutOfBoundsException e){
                 }
             }
@@ -586,7 +661,7 @@ public class GameScreen implements Screen, InputProcessor {
             else
                 System.out.println("El rey  se ha movido no puede realizar ningun enroque");
         }
-        posibles.add(String.valueOf(i) + String.valueOf(j));
+
         Rey.setCont(Rey.getCont()+1);
     }
     public void  moverAlfil(Pieza alfil,int i ,int j) {
