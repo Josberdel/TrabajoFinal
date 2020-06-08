@@ -17,7 +17,7 @@ public class GameScreen implements Screen, InputProcessor {
     private BitmapFont font = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
     private BitmapFont font2 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
     private BitmapFont font3 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
-    private BitmapFont font4 = new BitmapFont(Gdx.files.internal("ui/defualt.fnt"));
+
     SpriteBatch batch;
     int i = 0;
     int j = 0;
@@ -262,7 +262,7 @@ public class GameScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        font4.draw(batch,"para ganar lleva uno de tus peones al otro lado del tablero ",500,240);
+
         batch.draw(texturaTablero, 0, 0);
         for (i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
