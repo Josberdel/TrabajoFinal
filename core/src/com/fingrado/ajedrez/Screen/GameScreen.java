@@ -334,27 +334,24 @@ public class GameScreen implements Screen, InputProcessor {
                                 System.out.println(i + " " + j + matriz[i][j].getNombre());
                                 matriz[i][j].rect = new Rectangle(matriz[i][j].getPosicion().x, matriz[i][j].getPosicion().y, matriz[i][j].getTexture().getWidth(), matriz[i][j].getTexture().getWidth());
                                 System.out.println(i + " " + j + matriz[i][j].rect);
-                                if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) + 2 == i) {
-                                    System.out.println(matriz[i][j].getNombre() + " " + matriz[i][j].getPosicion() + " " + matriz[i][j].rect + " " + matriz[i][j].getTexture());
-                                    if ((7 + j) % 2 != 0) {
-                                        System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
-                                        matriz[7][j] = new Casilla("Casilla", true, new Vector2(7 * 60, j * 60), texturaCasillaBlanca);
-                                        matriz[i - 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x - 60, j * 60), torreBlanca);
-                                    } else {
-                                        System.out.println(matriz[i][j].getPosicion().x + " " + matriz[i][j].getPosicion().y);
+                                if (cont.getNombre() == "Rey" && cont.getCont()==1 && posibles.contains("60")) {
+                                    matriz[7][j] = new Casilla("Casilla", true, new Vector2(7 * 60, j * 60), texturaCasillaBlanca);
+                                    matriz[i - 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x - 60, j * 60), torreBlanca);
+                                    System.out.println(cont.getNombre()  + cont.getCont()==0 +" "+ posibles+" Si");
+                                }
+                                else
+                                     System.out.println(cont.getNombre() + cont.getCont()+" "+ posibles);
+                                if (cont.getNombre() == "Rey" && cont.getCont()==1 && posibles.contains("67")) {
                                         matriz[7][j] = new Casilla("Casilla", false, new Vector2(7 * 60, j * 60), texturaCasillaNegra);
                                         matriz[i - 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x - 60, j * 60), torreNegra);
-                                    }
-                                } else {
-                                    if (cont.getNombre() == "Rey" && Integer.parseInt(String.valueOf(posibles.get(posibles.size() - 1).charAt(0))) - 2 == i) {
-                                        if ((0 + j) % 2 == 0) {
-                                            matriz[0][j] = new Casilla("Casilla", false, new Vector2(i * 60, j * 60), texturaCasillaNegra);
-                                            matriz[i + 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x + 60, j * 60), torreBlanca);
-                                        } else {
+                                }
+                                if (cont.getNombre() == "Rey" && cont.getCont()==1 && posibles.contains("20")) {
+                                    matriz[0][j] = new Casilla("Casilla", false, new Vector2(i * 60, j * 60), texturaCasillaNegra);
+                                    matriz[i + 1][j] = new Torre("Torre", true, new Vector2(cont.getPosicion().x + 60, j * 60), torreBlanca);
+                                }
+                                if (cont.getNombre() == "Rey" && cont.getCont()==1 && posibles.contains("27")) {
                                             matriz[0][j] = new Casilla("Casilla", true, new Vector2(i * 60, j * 60), texturaCasillaBlanca);
                                             matriz[i + 1][j] = new Torre("Torre", false, new Vector2(cont.getPosicion().x + 60, j * 60), torreNegra);
-                                        }
-                                    }
                                 }
                                 if (turno == true) {
                                     System.out.println(posReyBlanco);
@@ -544,6 +541,7 @@ public class GameScreen implements Screen, InputProcessor {
             else
                 System.out.println("El rey  se ha movido no puede realizar ningun enroque");
         }
+
         Rey.setCont(Rey.getCont()+1);
     }
     public void  moverAlfil(Pieza alfil,int i ,int j) {
