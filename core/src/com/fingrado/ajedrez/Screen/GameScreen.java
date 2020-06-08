@@ -508,7 +508,8 @@ public class GameScreen implements Screen, InputProcessor {
             for (int b=-1;b<2;b++){
                 try{
                     if(matriz[i+a][j+b].getNombre().equals("Casilla")||matriz[i+a][j+b].isColor()!=Rey.isColor())
-                        posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
+                        if(!comprobarJaqueBlanco().contains(String.valueOf(i+a) + String.valueOf(j+b)))
+                            posibles.add(String.valueOf(i+a) + String.valueOf(j+b));
                 }catch (IndexOutOfBoundsException e){
                 }
             }
@@ -543,7 +544,6 @@ public class GameScreen implements Screen, InputProcessor {
             else
                 System.out.println("El rey  se ha movido no puede realizar ningun enroque");
         }
-        posibles.add(String.valueOf(i) + String.valueOf(j));
         Rey.setCont(Rey.getCont()+1);
     }
     public void  moverAlfil(Pieza alfil,int i ,int j) {
